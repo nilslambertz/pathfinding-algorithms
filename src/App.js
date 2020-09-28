@@ -86,8 +86,6 @@ class App extends React.Component {
                 <Main
                     maze={this.state.maze}
                     algorithm={this.state.algorithm}
-                    height={this.state.height}
-                    width={this.state.width}
                 />
             </div>
   )};
