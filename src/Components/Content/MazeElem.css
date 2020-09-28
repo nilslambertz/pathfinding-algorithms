@@ -1,0 +1,22 @@
+.mazeElem {
+}
+
+.border {
+    background-color: black;
+}
+
+.empty {
+    background-color: white;
+}
+
+.entry {
+    background-color: #31ff00;
+}
+
+.exit {
+    background-color: #ff0000;
+}
+
+.wall {
+    background-color: #7e7e7e;
+}
