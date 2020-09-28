@@ -22,17 +22,30 @@ class Main extends React.Component {
 
     printMaze() {
         return this.props.maze.map(function(c, i, a) {
+            let top = i === 0;
+            let bottom = i === a.length-1;
             return c.map(function(c2, i2, a2) {
                 let special = "empty";
-                if(c2 === 1) {
-                    special = "border";
-                } else if(c2 === 2) {
+                if(c2 === 2) {
                     special = "entry";
                 } else if(c2 === 3) {
                     special = "exit";
                 } else if(c2 === 4) {
                     special = "wall";
                 }
+                if(top) {
+                    special += " topBorder";
+                }
+                if(bottom) {
+                    special += " bottomBorder";
+                }
+                if(i2 === 0) {
+                    special += " leftBorder";
+                }
+                if(i2 === a2.length-1) {
+                    special += " rightBorder";
+                }
+
                 return <MazeElem special={special} key={i+i2} />
             })
         });

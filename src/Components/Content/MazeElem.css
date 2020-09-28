@@ -1,8 +1,36 @@
 .mazeElem {
 }
 
-.border {
-    background-color: black;
+.leftBorder {
+    border-left: 1px solid black;
+}
+
+.topBorder {
+    border-top: 1px solid black;
+}
+
+.bottomBorder {
+    border-bottom: 1px solid black;
+}
+
+.rightBorder {
+    border-right: 1px solid black;
+}
+
+.leftBorder.topBorder {
+    border-radius: 5px 0 0 0;
+}
+
+.rightBorder.topBorder {
+    border-radius: 0 5px 0 0;
+}
+
+.rightBorder.bottomBorder {
+    border-radius: 0 0 5px 0;
+}
+
+.leftBorder.bottomBorder {
+    border-radius: 0 0 0 5px;
 }
 
 .empty {
