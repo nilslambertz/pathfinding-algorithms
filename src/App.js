@@ -15,14 +15,14 @@ class App extends React.Component {
         solved: false,
         maze: [],
         width: 151,
-        height: 75
+        height: 75,
+        animationSpeed: 500
     }
 
     setAlgorithm = (nr) => {
         nr = parseInt(nr);
         this.setState({algorithm: nr}, () => {
             animation.changeAlgorithm(nr);
-            this.setState({firstIndex: null, secondIndex: null, leftBorder: null, rightBorder: null, mid: null});
         });
     }
 
