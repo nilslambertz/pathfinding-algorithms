@@ -1,7 +1,7 @@
 import React from 'react';
 import './SettingsBar.css';
 
-function SettingsBar({size, solved, animationRunning, animationSpeed, changeSize, newMazeClick, animationClick, changeSpeed}) {
+function SettingsBar({size, solved, animationRunning, animationSpeed, newMazeClick, animationClick, changeSpeed}) {
     const playStyle = {
         color: "lightgreen"
     }
@@ -16,20 +16,6 @@ function SettingsBar({size, solved, animationRunning, animationSpeed, changeSize
     return (
         <div id="settingsBar">
             <div id="settingsDiv">
-                {/*<table className={(animationRunning ? "disabledSetting" : "")}>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <input type="range" min={50} max={200} value={size} step={10} onChange={changeSize}/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            size
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>*/}
                 <table>
                     <tbody>
                     <tr>
@@ -48,7 +34,7 @@ function SettingsBar({size, solved, animationRunning, animationSpeed, changeSize
                     </tr>
                     </tbody>
                 </table>
-                <table className={(animationRunning ? "disabledSetting" : "")}>
+                {<table className={(animationRunning ? "disabledSetting" : "")}>
                     <tbody>
                     <tr>
                         <td>
@@ -61,7 +47,7 @@ function SettingsBar({size, solved, animationRunning, animationSpeed, changeSize
                         </td>
                     </tr>
                     </tbody>
-                </table>
+                </table>}
             </div>
         </div>
     );
