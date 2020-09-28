@@ -9,8 +9,8 @@ class Main extends React.Component {
         let height = this.props.maze.height + 2;
         let width = this.props.width + 2;
         let style = {
-            gridTemplateRows: "repeat(" + height + ", " + 100/height + "%)",
-            gridTemplateColumns: "repeat(" + width + ", " + 100/width + "%)"
+            gridTemplateRows: "repeat(" + height + ", min(1vh, 0.5vw))",
+            gridTemplateColumns: "repeat(" + width + ", min(1vh, 0.5vw))"
         }
         return (
             <div id="mainDiv" className={className}>
