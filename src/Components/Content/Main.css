@@ -13,6 +13,8 @@
     margin: 10px auto;
     width: 100%;
     height: calc(100% - 20px);
+    grid-template-rows: repeat(77, min(1vh, 0.5vw));
+    grid-template-columns: repeat(153, min(1vh, 0.5vw));
 }
 
 #footer {
