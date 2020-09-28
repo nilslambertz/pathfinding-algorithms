@@ -1,6 +1,6 @@
 import React from 'react';
 import './Main.css';
-import MazeElem from "./MazeElem";
+import "./MazeElem.css";
 
 class Main extends React.Component {
     render() {
@@ -25,7 +25,7 @@ class Main extends React.Component {
                 } else if(c2 === 4) {
                     special = "wall";
                 }
-                return <div className={"mazeElem " + special}/>
+                return <div className={"mazeElem " + special}/>;
             })
         });
     }
