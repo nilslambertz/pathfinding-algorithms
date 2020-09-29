@@ -12,8 +12,11 @@ class App extends React.Component {
     state = {
         algorithm: 0,
         animationRunning: false,
+        generationRunning: false,
         solved: false,
         maze: [],
+        start: [],
+        end: [],
         width: 151,
         height: 75,
         animationSpeed: 500
@@ -26,6 +29,14 @@ class App extends React.Component {
         });
     }
 
+    setStart = (arr) => {
+        this.setState({start: arr});
+    }
+
+    setEnd = (arr) => {
+        this.setState({end: arr});
+    }
+
     changeSpeed = (e) => {
         if(this.state.animationRunning) return;
         let newSpeed = parseFloat(e.target.value);
@@ -33,11 +44,24 @@ class App extends React.Component {
         animation.changeSpeed(newSpeed);
     }
 
-
     createMaze = () => {
-        let maze = createMaze(this.state.height, this.state.width);
-        animation.changeMaze(maze);
-        this.setState({maze});
+        let values = createMaze(this.state.height, this.state.width);
+        let maze = [];
+        for(let i = 0; i < this.state.height; i++) {
+            maze[i] = [];
+            for(let j = 0; j < this.state.width; j++) {
+                maze[i][j] = 1;
+            }
+        }
+        this.setState({
+            maze: maze,
+            start: values.start,
+            end: values.end,
+            generationRunning: true
+        }, () => {
+            animation.changeMaze(maze.slice(0), values.steps);
+            console.log(maze);
+        });
     }
 
     componentDidMount(){
@@ -50,6 +74,8 @@ class App extends React.Component {
     }
 
     animationClick = () => {
+        if(this.state.generationRunning) return;
+
         if(this.state.animationRunning) {
             animation.endAnimation();
             this.setState({animationRunning: false});
@@ -65,7 +91,7 @@ class App extends React.Component {
     }
 
     newMazeClick = () => {
-        if(this.state.animationRunning) return;
+        if(this.state.animationRunning || this.state.generationRunning) return;
         this.createMaze();
     }
 
