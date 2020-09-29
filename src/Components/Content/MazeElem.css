@@ -1,18 +1,19 @@
 .mazeElem {
+    transition: background-color 0.5s;
 }
 
 .empty {
     background-color: white;
 }
 
-.entry {
-    background-color: #31ff00;
+.start {
+    background-color: red;
 }
 
-.exit {
-    background-color: #ff0000;
+.end {
+    background-color: orangered;
 }
 
-.wall {
-    background-color: #474747;
+.test {
+    color: cornflowerblue;
 }

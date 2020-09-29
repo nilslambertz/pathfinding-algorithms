@@ -1,5 +1,5 @@
 #mainDiv {
-    padding: 0 20px 50px 20px;
+    padding: 0 20px 20px 20px;
     flex: 2;
     text-align: center;
     white-space: nowrap;
@@ -10,11 +10,13 @@
     position: relative;
     display: grid;
     justify-content: center;
+    padding: 10px;
     margin: 10px auto;
-    width: 100%;
-    height: calc(100% - 20px);
-    grid-template-rows: repeat(77, min(1vh, 0.5vw));
-    grid-template-columns: repeat(153, min(1vh, 0.5vw));
+    width: calc(max(453px, min(151vh, 75.5vw)) + 20px);
+    height: calc(max(225px, min(75vh, 37.5vw)) + 20px);
+    background-color: rgba(0, 0, 0, 0.4);
+    grid-template-rows: repeat(75, max(3px, min(1vh, 0.5vw)));
+    grid-template-columns: repeat(151, max(3px, min(1vh, 0.5vw)));
 }
 
 #footer {

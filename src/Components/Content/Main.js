@@ -17,15 +17,19 @@ class Main extends React.Component {
     printMaze() {
         return this.props.maze.map(function(c, i, a) {
             return c.map(function(c2, i2, a2) {
-                let special = "empty";
-                if(c2 === 2) {
-                    special = "entry";
-                } else if(c2 === 3) {
-                    special = "exit";
-                } else if(c2 === 4) {
+                let special;
+                if(c2 === 0) {
+                    special = "empty";
+                } else if(c2 === 1) {
                     special = "wall";
+                } else if(c2 === 2) {
+                    special = "start";
+                } else if(c2 === 3) {
+                    special = "end";
+                } else if(c2 === 4) {
+                    special = "test";
                 }
-                return <div className={"mazeElem " + special}/>;
+                return <div className={"mazeElem " + special} key={i+i2}/>;
             })
         });
     }
