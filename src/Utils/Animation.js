@@ -20,9 +20,26 @@ class Animation {
         this.steps = [];
     }
 
-    changeMaze(maze) {
+    changeMaze(maze, steps) {
+        this.animateMaze(steps);
+        console.log(steps);
         this.maze = maze;
         this.steps = [];
+    }
+
+    animateMaze(steps) {
+        let int = setInterval(() => {
+            if(steps.length === 0) {
+                clearInterval(int);
+                this.setState({generationRunning: false});
+                return;
+            }
+            let nextTwoHundred = steps.splice(0, 200);
+            for(let next of nextTwoHundred) {
+                this.maze[next[0]][next[1]] = 0;
+            }
+            this.setState({maze: this.maze});
+        }, 10);
     }
 
     changeSpeed(speed) {
