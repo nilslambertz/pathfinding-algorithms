@@ -10,6 +10,7 @@ class Animation {
     interval;
     start;
     end;
+    pathAnimating;
 
     constructor(setState) {
         this.setState = setState;
@@ -63,11 +64,12 @@ class Animation {
                     this.steps = values.steps;
                     this.path = values.path;
                 }
+                this.setState({animationRunning: true});
                 this.animate(this.recursiveStep);
                 return true;
             }
             default: {
-                alert("error");
+                this.setState({animationRunning: false});
                 return false;
             }
         }
@@ -76,17 +78,27 @@ class Animation {
     endAnimation(finished) {
         clearInterval(this.interval);
         if (finished) {
-            let int = setInterval(() => {
-                if(this.path.length === 0) {
-                    clearInterval(int);
-                    this.setState({animationRunning: false});
-                    return;
-                }
-                let elem = this.path.pop();
-                this.maze[elem.x][elem.y] = 5;
-                this.setState({maze: this.maze});
-            }, 10);
+            this.animatePath();
         }
+        if(this.pathAnimating !== true) {
+            this.setState({animationRunning: false});
+        }
+    }
+
+    animatePath() {
+        this.pathAnimating = true;
+        let int = setInterval(() => {
+            if(this.path.length === 0) {
+                clearInterval(int);
+                this.setState({animationRunning: false});
+                this.setState({solved: true});
+                this.pathAnimating = false;
+                return;
+            }
+            let elem = this.path.pop();
+            this.maze[elem.x][elem.y] = 5;
+            this.setState({maze: this.maze});
+        }, 10);
     }
 
     animate(step) {
