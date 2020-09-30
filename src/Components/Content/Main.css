@@ -15,6 +15,8 @@
     width: calc(max(453px, min(151vh, 75.5vw)) + 20px);
     height: calc(max(225px, min(75vh, 37.5vw)) + 20px);
     background-color: rgba(0, 0, 0, 0.4);
+    /*grid-template-rows: repeat(7, max(3px, min(5vh, 3vw)));
+    grid-template-columns: repeat(11, max(3px, min(5vh, 3vw)));*/
     grid-template-rows: repeat(75, max(3px, min(1vh, 0.5vw)));
     grid-template-columns: repeat(151, max(3px, min(1vh, 0.5vw)));
 }
