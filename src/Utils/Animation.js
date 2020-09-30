@@ -75,16 +75,17 @@ class Animation {
 
     endAnimation(finished) {
         clearInterval(this.interval);
-        this.setState({animationRunning: false});
         if (finished) {
-            for(let i = 0; i < this.maze.length; i++) {
-                for(let j = 0; j < this.maze[i].length; j++) {
-                    if(this.path[i][j] === true) this.maze[i][j] = 5;
+            let int = setInterval(() => {
+                if(this.path.length === 0) {
+                    clearInterval(int);
+                    this.setState({animationRunning: false});
+                    return;
                 }
-            }
-            this.maze[this.start[0]][this.start[1]] = 2;
-            this.maze[this.end[0]][this.end[1]] = 3;
-            this.setState({maze: this.maze});
+                let elem = this.path.pop();
+                this.maze[elem.x][elem.y] = 5;
+                this.setState({maze: this.maze});
+            }, 10);
         }
     }
 
