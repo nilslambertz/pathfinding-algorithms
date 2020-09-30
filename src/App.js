@@ -59,6 +59,7 @@ class App extends React.Component {
             maze: maze,
             start: values.start,
             end: values.end,
+            solved: false,
             generationRunning: true
         }, () => {
             animation.changeMaze(maze.slice(0), values.steps, values.start, values.end);
@@ -79,15 +80,8 @@ class App extends React.Component {
 
         if(this.state.animationRunning) {
             animation.endAnimation();
-            this.setState({animationRunning: false});
         } else if(this.state.solved === false) {
-            this.setState({animationRunning: true}, () =>
-            {
-                let success = animation.startAnimation();
-                if(!success) {
-                    this.setState({animationRunning: false});
-                }
-            });
+            animation.startAnimation();
         }
     }
 
