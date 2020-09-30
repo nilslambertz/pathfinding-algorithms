@@ -17,6 +17,8 @@ class App extends React.Component {
         maze: [],
         start: [],
         end: [],
+        /*width: 11,
+        height: 7,/**/
         width: 151,
         height: 75,
         animationSpeed: 500
@@ -59,8 +61,7 @@ class App extends React.Component {
             end: values.end,
             generationRunning: true
         }, () => {
-            animation.changeMaze(maze.slice(0), values.steps);
-            console.log(maze);
+            animation.changeMaze(maze.slice(0), values.steps, values.start, values.end);
         });
     }
 
