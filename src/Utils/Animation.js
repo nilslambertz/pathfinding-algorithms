@@ -1,4 +1,3 @@
-import { steps } from "./Functions";
 import {getRecursiveSteps} from "../Algorihms/Recursive";
 
 class Animation {
