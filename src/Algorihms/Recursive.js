@@ -2,6 +2,7 @@ let steps;
 let maze;
 let wasHere;
 let correctPath;
+let path;
 let end;
 
 function recursiveSolve(x, y, i) {
@@ -17,24 +18,28 @@ function recursiveSolve(x, y, i) {
     if(x !== 0 && maze[x-1][y] !== 1) {
         if(recursiveSolve(x-1, y, i+1) === true) {
             correctPath[x][y] = true;
+            path.push({x: x, y: y});
             return true;
         }
     }
     if(x !== maze.length-1 && maze[x+1][y] !== 1) {
         if(recursiveSolve(x+1, y, i+1) === true) {
             correctPath[x][y] = true;
+            path.push({x: x, y: y});
             return true;
         }
     }
     if(y !== 0 && maze[x][y-1] !== 1) {
         if(recursiveSolve(x, y-1, i+1) === true) {
             correctPath[x][y] = true;
+            path.push({x: x, y: y});
             return true;
         }
     }
     if(y !== maze[0].length-1 && maze[x][y+1] !== 1) {
         if(recursiveSolve(x, y+1, i+1) === true) {
             correctPath[x][y] = true;
+            path.push({x: x, y: y});
             return true;
         }
     }
@@ -47,6 +52,7 @@ function getRecursiveSteps(m, s, e) {
     end = e;
     wasHere = [];
     correctPath = [];
+    path = [];
     for(let i = 0; i < m.length; i++) {
         wasHere[i] = [];
         correctPath[i] =[];
@@ -57,9 +63,10 @@ function getRecursiveSteps(m, s, e) {
     }
     recursiveSolve(s[0],s[1], 0);
     steps.splice(0,1);
+    path.splice(path.length-1,1);
     return {
         steps: steps,
-        path: correctPath
+        path: path
     };
 }
 
