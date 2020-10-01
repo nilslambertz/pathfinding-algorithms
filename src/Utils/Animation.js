@@ -29,6 +29,10 @@ class Animation {
         this.maze = maze;
     }
 
+    changeAlgorithmSafe(nr) {
+        this.algorithm = nr;
+    }
+
     changeMaze(maze, steps, start, end) {
         this.animateMaze(steps, start, end);
         this.maze = maze;
