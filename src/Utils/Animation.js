@@ -14,6 +14,7 @@ class Animation {
     pathAnimating;
     count;
     dijkstraMax;
+    pathNumber;
 
     constructor(setState) {
         this.setState = setState;
@@ -72,6 +73,7 @@ class Animation {
                     this.steps = values.steps;
                     this.path = values.path;
                 }
+                this.pathNumber = 5;
                 this.setState({animationRunning: true});
                 this.animate(this.recursiveStep);
                 return true;
@@ -84,6 +86,7 @@ class Animation {
                     this.count = 0;
                     this.dijkstraMax = this.steps.length-1;
                 }
+                this.pathNumber = 4;
                 this.setState({animationRunning: true});
                 this.animate(this.dijkstraStep);
                 return true;
@@ -116,7 +119,7 @@ class Animation {
                 return;
             }
             let elem = this.path.shift();
-            this.maze[elem.x][elem.y] = 4;
+            this.maze[elem.x][elem.y] = this.pathNumber;
             this.setState({maze: this.maze});
         }, 10);
     }
