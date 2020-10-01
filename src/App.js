@@ -15,19 +15,31 @@ class App extends React.Component {
         generationRunning: false,
         solved: false,
         maze: [],
+        saveMaze: [],
         start: [],
         end: [],
         /*width: 11,
         height: 7,/**/
-        width: 151,
-        height: 75,
+        /**/width: 151,
+        height: 75,/**/
         animationSpeed: 500
     }
 
     setAlgorithm = (nr) => {
         nr = parseInt(nr);
+        if(nr === this.state.algorithm) return;
         this.setState({algorithm: nr}, () => {
             animation.changeAlgorithm(nr);
+            let maze = [];
+            let saveMaze = this.state.saveMaze;
+            for(let i = 0; i < saveMaze.length; i++) {
+                maze[i] = [];
+                for (let j = 0; j < saveMaze[i].length; j++) {
+                    maze[i][j] = saveMaze[i][j];
+                }
+            }
+            animation.changeAlgorithm(nr, maze);
+            this.setState({maze: maze, solved: false});
         });
     }
 
@@ -55,6 +67,7 @@ class App extends React.Component {
                 maze[i][j] = 1;
             }
         }
+
         this.setState({
             maze: maze,
             start: values.start,
