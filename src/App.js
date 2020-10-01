@@ -29,6 +29,7 @@ class App extends React.Component {
         nr = parseInt(nr);
         if(nr === this.state.algorithm) return;
         this.setState({algorithm: nr}, () => {
+            if(this.state.generationRunning === true) return;
             animation.changeAlgorithm(nr);
             let maze = [];
             let saveMaze = this.state.saveMaze;
