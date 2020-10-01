@@ -1,4 +1,5 @@
 import {getRecursiveSteps} from "../Algorihms/Recursive";
+import {getDijkstra} from "../Algorihms/Dijkstra";
 
 class Animation {
     setState;
@@ -11,6 +12,8 @@ class Animation {
     start;
     end;
     pathAnimating;
+    count;
+    dijkstraMax;
 
     constructor(setState) {
         this.setState = setState;
@@ -19,9 +22,10 @@ class Animation {
         this.steps = [];
     }
 
-    changeAlgorithm(algo) {
+    changeAlgorithm(algo, maze) {
         this.algorithm = algo;
         this.steps = [];
+        this.maze = maze;
     }
 
     changeMaze(maze, steps, start, end) {
@@ -36,12 +40,16 @@ class Animation {
         let int = setInterval(() => {
             if(steps.length === 0) {
                 clearInterval(int);
-                setTimeout(() => {
-                    this.maze[start[0]][start[1]] = 2;
-                    this.maze[end[0]][end[1]] = 3;
-                    this.setState({maze: this.maze});
-                },200);
-                this.setState({generationRunning: false});
+                this.maze[start[0]][start[1]] = 2;
+                this.maze[end[0]][end[1]] = 3;
+                let saveMaze = [];
+                for(let i = 0; i < this.maze.length; i++) {
+                    saveMaze[i] = [];
+                    for (let j = 0; j < this.maze[i].length; j++) {
+                        saveMaze[i][j] = this.maze[i][j];
+                    }
+                }
+                this.setState({maze: this.maze, saveMaze: saveMaze, generationRunning: false});
                 return;
             }
             let nextArray = steps.splice(0, 1000);
@@ -66,6 +74,18 @@ class Animation {
                 }
                 this.setState({animationRunning: true});
                 this.animate(this.recursiveStep);
+                return true;
+            }
+            case 1: {
+                if (this.steps.length === 0) {
+                    let values = getDijkstra(this.maze.slice(0), this.start, this.end);
+                    this.steps = values.steps;
+                    this.path = values.path;
+                    this.count = 0;
+                    this.dijkstraMax = this.steps.length-1;
+                }
+                this.setState({animationRunning: true});
+                this.animate(this.dijkstraStep);
                 return true;
             }
             default: {
@@ -95,8 +115,8 @@ class Animation {
                 this.pathAnimating = false;
                 return;
             }
-            let elem = this.path.pop();
-            this.maze[elem.x][elem.y] = 5;
+            let elem = this.path.shift();
+            this.maze[elem.x][elem.y] = 4;
             this.setState({maze: this.maze});
         }, 10);
     }
@@ -117,6 +137,31 @@ class Animation {
             this.maze[elem.x][elem.y] = 4;
         }
         this.setState({maze: this.maze});
+    }
+
+    dijkstraStep = () => {
+        let arr = this.steps.shift();
+        let c = this.count;
+        let val = this.pickColor(c);
+        for(let elem of arr) {
+            this.maze[elem.x][elem.y] = val;
+        }
+        this.maze[this.end[0]][this.end[1]] = 3;
+        this.count++;
+        this.setState({maze: this.maze});
+    }
+
+    pickColor = (c) => {
+        let firstColor = [129,255,0];
+        let secondColor = [255,76,0];
+        let diffR = secondColor[0] - firstColor[0];
+        let diffG = secondColor[1] - firstColor[1];
+        let diffB = secondColor[2] - firstColor[2];
+        let percent = c / this.dijkstraMax;
+        let newR = firstColor[0] + Math.round(diffR * percent);
+        let newG = firstColor[1] + Math.round(diffG * percent);
+        let newB = firstColor[2] + Math.round(diffB * percent);
+        return [newR, newG, newB];
     }
 }
 
