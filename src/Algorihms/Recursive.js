@@ -1,3 +1,5 @@
+import { getPathNeighbours } from "../Utils/Functions";
+
 let steps;
 let maze;
 let wasHere;
@@ -15,29 +17,10 @@ function recursiveSolve(x, y, i) {
 
     wasHere[x][y] = true;
     steps[i].push({x: x, y: y});
-    if(x !== 0 && maze[x-1][y] !== 1) {
-        if(recursiveSolve(x-1, y, i+1) === true) {
-            correctPath[x][y] = true;
-            path.push({x: x, y: y});
-            return true;
-        }
-    }
-    if(x !== maze.length-1 && maze[x+1][y] !== 1) {
-        if(recursiveSolve(x+1, y, i+1) === true) {
-            correctPath[x][y] = true;
-            path.push({x: x, y: y});
-            return true;
-        }
-    }
-    if(y !== 0 && maze[x][y-1] !== 1) {
-        if(recursiveSolve(x, y-1, i+1) === true) {
-            correctPath[x][y] = true;
-            path.push({x: x, y: y});
-            return true;
-        }
-    }
-    if(y !== maze[0].length-1 && maze[x][y+1] !== 1) {
-        if(recursiveSolve(x, y+1, i+1) === true) {
+
+    let n = getPathNeighbours(maze, x, y);
+    for(let elem of n) {
+        if(recursiveSolve(elem.x, elem.y, i+1) === true) {
             correctPath[x][y] = true;
             path.push({x: x, y: y});
             return true;

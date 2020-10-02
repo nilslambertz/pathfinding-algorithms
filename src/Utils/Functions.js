@@ -114,3 +114,33 @@ function getRandomItem(set) {
     let items = Array.from(set);
     return items[Math.floor(Math.random() * items.length)];
 }
+
+export const getPathNeighbours = (maze, x, y) => {
+    let n = [];
+
+    if(x > 0 && maze[x-1][y] !== 1) {
+        n.push({
+            x: x-1,
+            y: y
+        });
+    }
+    if(x < maze.length-1 && maze[x+1][y] !== 1) {
+        n.push({
+            x: x+1,
+            y: y
+        });
+    }
+    if(y > 0 && maze[x][y-1] !== 1) {
+        n.push({
+            x: x,
+            y: y-1
+        });
+    }
+    if(y < maze[0].length-1 && maze[x][y+1] !== 1) {
+        n.push({
+            x: x,
+            y: y+1
+        });
+    }
+    return n;
+}

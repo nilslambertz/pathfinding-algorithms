@@ -1,3 +1,5 @@
+import { getPathNeighbours } from "../Utils/Functions";
+
 let steps;
 let maze;
 let wasHere;
@@ -14,17 +16,12 @@ function dijkstra(x, y, c) {
     cost[x][y] = c;
     steps[c].push({x:x, y:y});
     wasHere[x][y] = true;
-    if(x > 0 && maze[x-1][y] !== 1 && wasHere[x-1][y] === false) {
-        dijkstra(x-1, y, c+1);
-    }
-    if(x < maze.length-1 && maze[x+1][y] !== 1 && wasHere[x+1][y] === false) {
-        dijkstra(x+1, y, c+1);
-    }
-    if(y > 0 && maze[x][y-1] !== 1 && wasHere[x][y-1] === false) {
-        dijkstra(x, y-1, c+1);
-    }
-    if(y < maze[0].length-1 && maze[x][y+1] !== 1 && wasHere[x][y+1] === false) {
-        dijkstra(x,y+1, c+1);
+
+    let n = getPathNeighbours(maze, x, y);
+    for(let elem of n) {
+        if(wasHere[elem.x][elem.y] === false) {
+            dijkstra(elem.x, elem.y, c+1);
+        }
     }
 }
 
