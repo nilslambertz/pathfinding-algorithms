@@ -1,6 +1,6 @@
-import {getRecursiveSteps} from "../Algorihms/Recursive";
-import {getDijkstra} from "../Algorihms/Dijkstra";
-import {getTremaux} from "../Algorihms/Tremaux";
+import {getRecursiveSteps} from "../Algorithms/Recursive";
+import {getDijkstra} from "../Algorithms/Dijkstra";
+import {getTremaux} from "../Algorithms/Tremaux";
 
 class Animation {
     setState;
