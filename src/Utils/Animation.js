@@ -1,5 +1,6 @@
 import {getRecursiveSteps} from "../Algorihms/Recursive";
 import {getDijkstra} from "../Algorihms/Dijkstra";
+import {getTremaux} from "../Algorihms/Tremaux";
 
 class Animation {
     setState;
@@ -15,10 +16,11 @@ class Animation {
     count;
     dijkstraMax;
     pathNumber;
+    lastElem;
 
-    constructor(setState) {
+    constructor(setState, algorithm) {
         this.setState = setState;
-        this.algorithm = 0;
+        this.algorithm = algorithm;
         this.speed = 5;
         this.steps = [];
     }
@@ -79,7 +81,7 @@ class Animation {
                 }
                 this.pathNumber = 5;
                 this.setState({animationRunning: true});
-                this.animate(this.recursiveStep);
+                this.animate(this.recursiveStep, this.pathStepBack);
                 return true;
             }
             case 1: {
@@ -92,7 +94,18 @@ class Animation {
                 }
                 this.pathNumber = 4;
                 this.setState({animationRunning: true});
-                this.animate(this.dijkstraStep);
+                this.animate(this.dijkstraStep, this.pathStepFront);
+                return true;
+            }
+            case 2: {
+                if (this.steps.length === 0) {
+                    let values = getTremaux(this.maze.slice(0), this.start, this.end);
+                    this.steps = values.steps;
+                    this.path = values.path;
+                }
+                this.pathNumber = 5;
+                this.setState({animationRunning: true});
+                this.animate(this.tremauxStep, this.pathStepFront);
                 return true;
             }
             default: {
@@ -102,17 +115,17 @@ class Animation {
         }
     }
 
-    endAnimation(finished) {
+    endAnimation(finished, pathFunc) {
         clearInterval(this.interval);
         if (finished) {
-            this.animatePath();
+            this.animatePath(pathFunc);
         }
         if(this.pathAnimating !== true) {
             this.setState({animationRunning: false});
         }
     }
 
-    animatePath() {
+    animatePath(func) {
         this.pathAnimating = true;
         let int = setInterval(() => {
             if(this.path.length === 0) {
@@ -122,16 +135,26 @@ class Animation {
                 this.pathAnimating = false;
                 return;
             }
-            let elem = this.path.shift();
-            this.maze[elem.x][elem.y] = this.pathNumber;
-            this.setState({maze: this.maze});
+            func();
         }, 10);
     }
 
-    animate(step) {
+    pathStepBack = () => {
+        let elem = this.path.pop();
+        this.maze[elem.x][elem.y] = this.pathNumber;
+        this.setState({maze: this.maze});
+    }
+
+    pathStepFront = () => {
+        let elem = this.path.shift();
+        this.maze[elem.x][elem.y] = this.pathNumber;
+        this.setState({maze: this.maze});
+    }
+
+    animate(step, pathFunc) {
         this.interval = setInterval(() => {
             if (this.steps.length === 0) {
-                this.endAnimation(true);
+                this.endAnimation(true, pathFunc);
                 return;
             }
             step();
@@ -143,6 +166,75 @@ class Animation {
         for(let elem of arr) {
             this.maze[elem.x][elem.y] = 4;
         }
+        this.setState({maze: this.maze});
+    }
+
+    tremauxStep = () => {
+        let arr = this.steps.shift();
+
+        if(arr.end === true) {
+            let lastArr = this.lastElem;
+            if(lastArr.junctionX !== undefined && lastArr.junctionY !== undefined) {
+                this.maze[lastArr.junctionX][lastArr.junctionY] = 0;
+            } else {
+                for (let i = 1; i < lastArr.length-1; i++) {
+                    this.maze[lastArr[i].x][lastArr[i].y] = 0;
+                }
+
+                let mark = lastArr[0];
+                if(mark !== null && mark.markedX !== undefined && mark.markedY !== undefined) {
+                    console.log(mark);
+                    this.maze[mark.markedX][mark.markedY] = mark.markCount;
+                }
+            }
+            this.maze[this.start[0]][this.start[1]] = 2;
+            this.maze[this.end[0]][this.end[1]] = 3;
+            this.setState({maze: this.maze});
+            return;
+        }
+
+        if(arr.junctionX !== undefined && arr.junctionY !== undefined) {
+            this.maze[this.start[0]][this.start[1]] = 2;
+            this.maze[this.end[0]][this.end[1]] = 3;
+            this.maze[arr.junctionX][arr.junctionY] = 4;
+            if(this.lastElem !== undefined) {
+                let lastArr = this.lastElem;
+                let first = lastArr[0];
+                let last = lastArr[lastArr.length-1];
+
+                let x1;
+                let x2;
+                let y1;
+                let y2;
+
+                if(first !== null && (last.markedX !== first.markedX || last.markedY !== first.markedY)) {
+                    if(first.markedX !== null && first.markedY !== null) {
+                        x1 = first.markedX;
+                        y1 = first.markedY;
+                        this.maze[x1][y1] = first.markCount;
+                    }
+                }
+                x2 = last.markedX;
+                y2 = last.markedY;
+                this.maze[x2][y2] = last.markCount;
+
+                for (let i = 1; i < lastArr.length-1; i++) {
+                    if((lastArr[i].x !== x1 || lastArr[i].y !== y1) && (lastArr[i].x !== x2 || lastArr[i].y !== y2)) {
+                        this.maze[lastArr[i].x][lastArr[i].y] = 0;
+                    }
+                }
+            }
+        } else {
+            this.maze[this.start[0]][this.start[1]] = 2;
+            this.maze[this.end[0]][this.end[1]] = 3;
+            if(this.lastElem !== undefined && this.lastElem.junctionX !== undefined && this.lastElem.junctionY !== undefined) {
+                this.maze[this.lastElem.junctionX][this.lastElem.junctionY] = 0;
+            }
+            for(let i = 1; i < arr.length -1; i++) {
+                this.maze[arr[i].x][arr[i].y] = 4;
+            }
+        }
+        this.lastElem = arr;
         this.setState({maze: this.maze});
     }
 
