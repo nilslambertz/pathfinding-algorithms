@@ -21,6 +21,14 @@
     grid-template-columns: repeat(151, max(3px, min(1vh, 0.5vw)));/**/
 }
 
+.transition .mazeElem {
+    transition: background-color 0.5s;
+}
+
+.noTransition .mazeElem {
+    transition: none;
+}
+
 #footer {
     position: absolute;
     cursor: default;
