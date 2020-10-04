@@ -10,7 +10,7 @@ let animation;
 
 class App extends React.Component {
     state = {
-        algorithm: 0,
+        algorithm: 2,
         animationRunning: false,
         generationRunning: false,
         solved: false,
@@ -83,7 +83,7 @@ class App extends React.Component {
     }
 
     componentDidMount(){
-        animation = new Animation(this.changeState);
+        animation = new Animation(this.changeState, this.state.algorithm);
         this.createMaze();
     }
 
