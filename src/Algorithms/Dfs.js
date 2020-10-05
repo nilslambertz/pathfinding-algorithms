@@ -7,7 +7,7 @@ let correctPath;
 let path;
 let end;
 
-function recursiveSolve(x, y, i) {
+function dfs(x, y, i) {
     if(x === end[0] && y === end[1]) return true;
     if(wasHere[x][y] === true) return false;
 
@@ -20,7 +20,7 @@ function recursiveSolve(x, y, i) {
 
     let n = getPathNeighbours(maze, x, y);
     for(let elem of n) {
-        if(recursiveSolve(elem.x, elem.y, i+1) === true) {
+        if(dfs(elem.x, elem.y, i+1) === true) {
             correctPath[x][y] = true;
             path.push({x: x, y: y});
             return true;
@@ -29,7 +29,7 @@ function recursiveSolve(x, y, i) {
     return false;
 }
 
-function getRecursiveSteps(m, s, e) {
+function getDfsSteps(m, s, e) {
     maze = m;
     steps = [];
     end = e;
@@ -44,7 +44,7 @@ function getRecursiveSteps(m, s, e) {
             correctPath[i][j] = false;
         }
     }
-    recursiveSolve(s[0],s[1], 0);
+    dfs(s[0],s[1], 0);
     steps.splice(0,1);
     path.splice(path.length-1,1);
     return {
@@ -53,4 +53,4 @@ function getRecursiveSteps(m, s, e) {
     };
 }
 
-export { getRecursiveSteps };
+export { getDfsSteps };

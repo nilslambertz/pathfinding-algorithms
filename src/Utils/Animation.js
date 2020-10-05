@@ -1,4 +1,4 @@
-import {getRecursiveSteps} from "../Algorithms/Recursive";
+import {getDfsSteps} from "../Algorithms/Dfs";
 import {getDijkstra} from "../Algorithms/Dijkstra";
 import {getTremaux} from "../Algorithms/Tremaux";
 
@@ -75,13 +75,13 @@ class Animation {
         switch (this.algorithm) {
             case 0: {
                 if (this.steps.length === 0) {
-                    let values = getRecursiveSteps(this.maze.slice(0), this.start, this.end);
+                    let values = getDfsSteps(this.maze.slice(0), this.start, this.end);
                     this.steps = values.steps;
                     this.path = values.path;
                 }
                 this.pathNumber = 5;
                 this.setState({animationRunning: true});
-                this.animate(this.recursiveStep, this.pathStepBack);
+                this.animate(this.dfsStep, this.pathStepBack);
                 return true;
             }
             case 1: {
@@ -161,7 +161,7 @@ class Animation {
         }, this.speed);
     }
 
-    recursiveStep = () => {
+    dfsStep = () => {
         let arr = this.steps.shift();
         for(let elem of arr) {
             this.maze[elem.x][elem.y] = 4;

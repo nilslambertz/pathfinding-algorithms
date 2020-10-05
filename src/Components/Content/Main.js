@@ -35,7 +35,7 @@ class Main extends React.Component {
     printMaze() {
         switch(this.props.algorithm) {
             case 0: {
-                return this.printRecursionMaze();
+                return this.printDfsMaze();
             }
             case 1: {
                 return this.printDijkstraMaze();
@@ -44,7 +44,7 @@ class Main extends React.Component {
                 return this.printTremauxMaze();
             }
             default: {
-                return this.printRecursionMaze();
+                return this.printDfsMaze();
             }
         }
     }
@@ -73,7 +73,7 @@ class Main extends React.Component {
         });
     }
 
-    printRecursionMaze() {
+    printDfsMaze() {
         return this.props.maze.map(function(c, i, a) {
             return c.map(function(c2, i2, a2) {
                 if(c2 === 0) {
