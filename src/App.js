@@ -12,7 +12,6 @@ class App extends React.Component {
     state = {
         algorithm: 2,
         animationRunning: false,
-        generationRunning: false,
         solved: false,
         maze: [],
         saveMaze: [],
@@ -29,10 +28,6 @@ class App extends React.Component {
         nr = parseInt(nr);
         if(nr === this.state.algorithm) return;
         this.setState({algorithm: nr}, () => {
-            if(this.state.generationRunning === true) {
-                animation.changeAlgorithmSafe(nr);
-                return;
-            }
             let maze = [];
             let saveMaze = this.state.saveMaze;
             for(let i = 0; i < saveMaze.length; i++) {
@@ -72,13 +67,12 @@ class App extends React.Component {
         }
 
         this.setState({
-            maze: maze,
+            maze: values.maze,
             start: values.start,
             end: values.end,
-            solved: false,
-            generationRunning: true
+            solved: false
         }, () => {
-            animation.changeMaze(maze.slice(0), values.steps, values.start, values.end);
+            animation.changeMaze(values.maze.slice(0), values.steps, values.start, values.end);
         });
     }
 
@@ -92,8 +86,6 @@ class App extends React.Component {
     }
 
     animationClick = () => {
-        if(this.state.generationRunning) return;
-
         if(this.state.animationRunning) {
             animation.endAnimation();
         } else if(this.state.solved === false) {
@@ -102,7 +94,7 @@ class App extends React.Component {
     }
 
     newMazeClick = () => {
-        if(this.state.animationRunning || this.state.generationRunning) return;
+        if(this.state.animationRunning) return;
         this.createMaze();
     }
 

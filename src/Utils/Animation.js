@@ -36,35 +36,19 @@ class Animation {
     }
 
     changeMaze(maze, steps, start, end) {
-        this.animateMaze(steps, start, end);
         this.maze = maze;
         this.steps = [];
         this.start = start;
         this.end = end;
-    }
 
-    animateMaze(steps, start, end) {
-        let int = setInterval(() => {
-            if(steps.length === 0) {
-                clearInterval(int);
-                this.maze[start[0]][start[1]] = 2;
-                this.maze[end[0]][end[1]] = 3;
-                let saveMaze = [];
-                for(let i = 0; i < this.maze.length; i++) {
-                    saveMaze[i] = [];
-                    for (let j = 0; j < this.maze[i].length; j++) {
-                        saveMaze[i][j] = this.maze[i][j];
-                    }
-                }
-                this.setState({maze: this.maze, saveMaze: saveMaze, generationRunning: false});
-                return;
+        let saveMaze = [];
+        for(let i = 0; i < maze.length; i++) {
+            saveMaze[i] = [];
+            for (let j = 0; j < maze[i].length; j++) {
+                saveMaze[i][j] = maze[i][j];
             }
-            let nextArray = steps.splice(0, 1000);
-            for(let next of nextArray) {
-                this.maze[next[0]][next[1]] = 0;
-            }
-            this.setState({maze: this.maze});
-        }, 400);
+        }
+        this.setState({maze: this.maze, saveMaze: saveMaze});
     }
 
     changeSpeed(speed) {

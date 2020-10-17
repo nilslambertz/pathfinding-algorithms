@@ -7,9 +7,7 @@ export const createMaze = (height, width) => {
         }
     }
 
-    let steps = [];
-
-    primsAlgorithm(maze, steps);
+    primsAlgorithm(maze);
 
     let startX = Math.floor(Math.random() * maze.length);
     let startY = Math.floor(Math.random() * maze[0].length);
@@ -28,14 +26,13 @@ export const createMaze = (height, width) => {
     maze[endX][endY] = 3;
 
     return {
-        steps: steps,
         maze: maze,
         start: [startX, startY],
         end: [endX, endY]
     };
 }
 
-function primsAlgorithm(maze, steps) {
+function primsAlgorithm(maze) {
     let walls = new Set();
     let firstX = Math.floor(Math.random() * maze.length);
     if(firstX % 2 === 1) firstX--;
@@ -43,37 +40,31 @@ function primsAlgorithm(maze, steps) {
     if(firstY % 2 === 1) firstY--;
     addWalls(firstX,firstY, walls, maze);
     maze[firstX][firstY] = 0;
-    steps.push([firstX, firstY]);
     while(walls.size > 0) {
         let random = getRandomItem(walls);
         let x = parseInt(random.substring(0, random.indexOf(",")));
         let y = parseInt(random.substring(random.indexOf(",") + 1));
         let neighbours = getNeighbours(x, y, maze);
         let randomNeighbour = neighbours.splice(Math.floor(Math.random() * neighbours.length), 1)[0];
-        createPath(x, y, randomNeighbour[0], randomNeighbour[1], maze, steps);
+        createPath(x, y, randomNeighbour[0], randomNeighbour[1], maze);
         maze[x][y] = 0;
-        steps.push([x, y]);
         walls.delete(random);
         addWalls(x, y, walls,maze);
     }
 }
 
-function createPath(x1, y1, x2, y2, maze, steps) {
+function createPath(x1, y1, x2, y2, maze) {
     if(x1 === x2) {
         if(y1 < y2) {
             maze[x1][y1+1] = 0;
-            steps.push([x1, y1+1]);
         } else {
             maze[x1][y1-1] = 0;
-            steps.push([x1, y1-1]);
         }
     } else {
         if(x1 < x2) {
             maze[x1+1][y1] = 0;
-            steps.push([x1+1, y1]);
         } else {
             maze[x1-1][y1] = 0;
-            steps.push([x1-1, y1]);
         }
     }
 }
