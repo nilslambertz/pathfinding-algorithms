@@ -6,21 +6,24 @@ let wasHere;
 let correctPath;
 let path;
 let end;
+let count;
 
-function dfs(x, y, i) {
+function dfs(x, y, c) {
     if(x === end[0] && y === end[1]) return true;
-    if(wasHere[x][y] === true) return false;
 
-    if(steps[i] === undefined) {
-        steps[i] = [];
+    if(wasHere[x][y] === true) {
+        if(c !== 0) steps[++count] = [];
+        return false;
     }
-
+    steps[count].push({x: x, y: y});
     wasHere[x][y] = true;
-    steps[i].push({x: x, y: y});
 
     let n = getPathNeighbours(maze, x, y);
-    for(let elem of n) {
-        if(dfs(elem.x, elem.y, i+1) === true) {
+    if(n.length > 2) {
+        steps[++count] = [];
+    }
+    for(let i = 0; i < n.length; i++) {
+        if(dfs(n[i].x, n[i].y, i) === true) {
             correctPath[x][y] = true;
             path.push({x: x, y: y});
             return true;
@@ -36,6 +39,7 @@ function getDfsSteps(m, s, e) {
     wasHere = [];
     correctPath = [];
     path = [];
+    count = 0;
     for(let i = 0; i < m.length; i++) {
         wasHere[i] = [];
         correctPath[i] =[];
@@ -44,8 +48,10 @@ function getDfsSteps(m, s, e) {
             correctPath[i][j] = false;
         }
     }
+    steps = [];
+    steps[0] = [];
     dfs(s[0],s[1], 0);
-    steps.splice(0,1);
+    steps[0].splice(0,1);
     path.splice(path.length-1,1);
     return {
         steps: steps,
