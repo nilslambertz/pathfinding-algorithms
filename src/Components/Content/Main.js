@@ -33,20 +33,10 @@ class Main extends React.Component {
     }
 
     printMaze() {
-        switch(this.props.algorithm) {
-            case 0: {
-                return this.printDfsMaze();
-            }
-            case 1: {
-                return this.printDfsMaze();
-            }
-            case 2: {
-                return this.printTremauxMaze();
-            }
-            default: {
-                return this.printDfsMaze();
-            }
+        if(this.props.algorithm === 2) {
+            return this.printTremauxMaze();
         }
+        return this.printDfsMaze();
     }
 
     printDfsMaze() {
