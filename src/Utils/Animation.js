@@ -1,6 +1,7 @@
 import {getDfsSteps} from "../Algorithms/Dfs";
 import {getDijkstra} from "../Algorithms/Dijkstra";
 import {getTremaux} from "../Algorithms/Tremaux";
+import {getGreedy} from "../Algorithms/GreedySearch";
 
 class Animation {
     setState;
@@ -92,6 +93,18 @@ class Animation {
                 this.animate(this.tremauxStep, this.pathStepFront);
                 return true;
             }
+            case 3: {
+                if (this.steps.length === 0) {
+                    let values = getGreedy(this.maze.slice(0), this.start, this.end);
+                    this.steps = values.steps;
+                    this.path = values.path;
+                }
+
+                this.pathNumber = 5;
+                this.setState({animationRunning: true});
+                this.animate(this.greedyStep, this.pathStepBack);
+                return true;
+            }
             default: {
                 this.setState({animationRunning: false});
                 return false;
@@ -143,6 +156,12 @@ class Animation {
             }
             step();
         }, this.speed);
+    }
+
+    greedyStep = () => {
+        let elem = this.steps.shift();
+        this.maze[elem.x][elem.y] = 4;
+        this.setState({maze: this.maze});
     }
 
     dfsStep = () => {
