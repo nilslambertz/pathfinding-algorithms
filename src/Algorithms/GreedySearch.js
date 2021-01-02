@@ -3,32 +3,46 @@ import { getPathNeighbours } from "../Utils/Functions";
 let steps;
 let maze;
 let wasHere;
-let distance;
-let distanceVisited;
-let distanceSteps;
+let stack;
 let path;
 let start;
 let end;
 
-function setDistances(x, y, dist) {
-    if(x < 0 || y < 0 || x > maze.length-1 || y > maze[0].length - 1) return;
-    console.log(x + ":" + y);
-    if(distanceVisited[x][y] === true) return;
-
-    distanceVisited[x][y] = true;
-
-    if(maze[x][y] !== 1) {
-        if(distanceSteps[dist] === undefined) {
-            distanceSteps[dist] = [];
-        }
-        distance[x][y] = dist;
-        distanceSteps[dist].push({x: x, y: y});
-    }
-    setDistances(x-1, y, dist+1);
-    setDistances(x+1, y, dist+1);
-    setDistances(x, y-1, dist+1);
-    setDistances(x, y+1, dist+1);
+function getDistance(x, y) {
+    return Math.abs(x - end[0]) + Math.abs(y - end[1]);
 }
+
+function greedySearch() {
+    while(stack.length !== 0) {
+        let elem = stack.pop();
+
+        if(wasHere[elem.x][elem.y]) continue;
+
+        wasHere[elem.x][elem.y] = true;
+        steps.push(elem);
+
+        if(elem.x === end[0] && elem.y === end[1]) {
+            do {
+                path.push(elem);
+            } while((elem = elem.parent) !== null);
+            return;
+        }
+
+        let neighbours = getPathNeighbours(maze, elem.x, elem.y);
+        for(let n of neighbours) {
+            n.distance = getDistance(n.x, n.y);
+            n.parent = elem;
+        }
+        neighbours.sort(function(a, b) {
+            return b.distance - a.distance;
+        });
+
+        for(let n of neighbours) {
+            stack.push(n);
+        }
+    }
+}
+
 
 function getGreedy(m, s, e) {
     maze = m;
@@ -36,28 +50,24 @@ function getGreedy(m, s, e) {
     end = e;
     start = s;
     wasHere = [];
-    distanceSteps = [];
-    distanceVisited = [];
+    stack = [];
     path = [];
-    distance = [];
     for (let i = 0; i < m.length; i++) {
         wasHere[i] = [];
-        distance[i] = [];
-        distanceVisited[i] = [];
         for (let j = 0; j < m[i].length; j++) {
             wasHere[i][j] = false;
-            distanceVisited[i][j] = false;
-            distance[i][j] = -1;
         }
     }
-    console.log(distanceVisited);
-    setDistances(end[0], end[1], 0);
-    //dijkstra(s[0], s[1], 0);
+    stack.push({x: s[0], y: s[1], parent: null});
 
+    greedySearch();
+    steps.shift();
+    steps.pop();
+    path.shift();
+    path.pop();
     return {
         steps: steps,
-        path: path,
-        distance: distanceSteps
+        path: path
     };
 }
 
