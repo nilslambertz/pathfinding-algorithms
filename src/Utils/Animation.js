@@ -20,12 +20,14 @@ class Animation {
     dijkstraMax;
     pathNumber;
     lastElem;
+    addCount;
 
-    constructor(setState, algorithm) {
+    constructor(setState, algorithm, addCountFunction) {
         this.setState = setState;
         this.algorithm = algorithm;
         this.speed = 5;
         this.steps = [];
+        this.addCount = addCountFunction;
     }
 
     changeAlgorithm(algo, maze) {
@@ -168,12 +170,14 @@ class Animation {
     greedyStep = () => {
         let elem = this.steps.shift();
         this.maze[elem.x][elem.y] = 4;
+        this.addCount(1);
         this.setState({maze: this.maze});
     }
 
     aStarStep = () => {
         let elem = this.steps.shift();
         this.maze[elem.x][elem.y] = 4;
+        this.addCount(1);
         this.setState({maze: this.maze});
     }
 
@@ -182,6 +186,7 @@ class Animation {
         for(let elem of arr) {
             this.maze[elem.x][elem.y] = 4;
         }
+        this.addCount(arr.length);
         this.setState({maze: this.maze});
     }
 
@@ -192,6 +197,7 @@ class Animation {
             let lastArr = this.lastElem;
             if(lastArr.junctionX !== undefined && lastArr.junctionY !== undefined) {
                 this.maze[lastArr.junctionX][lastArr.junctionY] = 0;
+                this.addCount(1);
             } else {
                 for (let i = 1; i < lastArr.length-1; i++) {
                     this.maze[lastArr[i].x][lastArr[i].y] = 0;
@@ -212,6 +218,7 @@ class Animation {
             this.maze[this.start[0]][this.start[1]] = 2;
             this.maze[this.end[0]][this.end[1]] = 3;
             this.maze[arr.junctionX][arr.junctionY] = 4;
+            this.addCount(1);
             if(this.lastElem !== undefined) {
                 let lastArr = this.lastElem;
                 let first = lastArr[0];
@@ -248,6 +255,7 @@ class Animation {
             for(let i = 1; i < arr.length -1; i++) {
                 this.maze[arr[i].x][arr[i].y] = 4;
             }
+            this.addCount(arr.length-2);
         }
         this.lastElem = arr;
         this.setState({maze: this.maze});
@@ -258,6 +266,7 @@ class Animation {
         for(let elem of arr) {
             this.maze[elem.x][elem.y] = 4;
         }
+        this.addCount(arr.length);
         this.setState({maze: this.maze});
     }
 }
