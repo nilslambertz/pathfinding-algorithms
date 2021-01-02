@@ -1,27 +1,39 @@
 import { getPathNeighbours } from "../Utils/Functions";
 
+let PriorityQueue = require('priorityqueuejs');
+
 let steps;
 let maze;
 let wasHere;
-let cost;
+let queue;
 let path;
 let start;
 let end;
 
-function dijkstra(x, y, c) {
-    if(steps[c] === undefined) {
-        steps[c] = [];
-    }
+function dijkstra() {
+    while(!queue.isEmpty()) {
+        let elem = queue.deq();
 
-    cost[x][y] = c;
-    steps[c].push({x:x, y:y});
-    wasHere[x][y] = true;
+        if(wasHere[elem.x][elem.y] === true) continue;
+        wasHere[elem.x][elem.y] = true;
+        steps.push(elem);
 
-    let n = getPathNeighbours(maze, x, y);
-    for(let elem of n) {
-        if(wasHere[elem.x][elem.y] === false) {
-            dijkstra(elem.x, elem.y, c+1);
+        if(elem.x === end[0] && elem.y === end[1]) {
+            do {
+                path.push(elem);
+            } while((elem = elem.parent) !== null);
+            return;
         }
+
+        let neighbours = getPathNeighbours(maze, elem.x, elem.y);
+        for(let n of neighbours) {
+            if(wasHere[n.x][n.y] === true) continue;
+
+            n.distance = elem.distance + 1;
+            n.parent = elem;
+            queue.enq(n);
+        }
+
     }
 }
 
@@ -32,44 +44,25 @@ function getDijkstra(m, s, e) {
     start = s;
     wasHere = [];
     path = [];
-    cost = [];
     for (let i = 0; i < m.length; i++) {
         wasHere[i] = [];
-        cost[i] = []
         for (let j = 0; j < m[i].length; j++) {
             wasHere[i][j] = false;
-            cost[i][j] = -1;
         }
     }
-    dijkstra(s[0], s[1], 0);
-    let x = end[0];
-    let y = end[1];
 
-    while(x !== start[0] || y !== start[1]) {
-        let currectCost = cost[x][y];
-        if(x > 0 && cost[x-1][y] < currectCost && cost[x-1][y] !== -1) {
-            path.push({x: x-1, y: y});
-            x--;
-            continue;
-        }
-        if(x < maze.length-1 && cost[x+1][y] < currectCost && cost[x+1][y] !== -1) {
-            path.push({x: x+1, y: y});
-            x++;
-            continue;
-        }
-        if(y > 0 && cost[x][y-1] < currectCost && cost[x][y-1] !== -1) {
-            path.push({x: x, y: y-1});
-            y--;
-            continue;
-        }
-        if(y < maze[0].length-1 && cost[x][y+1] < currectCost && cost[x][y+1] !== -1) {
-            path.push({x: x, y: y+1});
-            y++;
-            continue;
-        }
-    }
-    steps.splice(0,1);
-    path.splice(path.length-1,1);
+    queue = new PriorityQueue(function(a, b) {
+        return b.distance - a.distance;
+    });
+
+    queue.enq({x: s[0], y: s[1], distance: 0, parent: null});
+
+    dijkstra();
+
+    steps.shift();
+    steps.pop();
+    path.shift();
+    path.pop();
 
     return {
         steps: steps,
