@@ -17,6 +17,7 @@ class App extends React.Component {
         saveMaze: [],
         start: [],
         end: [],
+        stepCount: 0,
         /*width: 11,
         height: 7,/**/
         /**/width: 151,
@@ -27,6 +28,7 @@ class App extends React.Component {
     setAlgorithm = (nr) => {
         nr = parseInt(nr);
         if(nr === this.state.algorithm) return;
+        this.setState({stepCount: 0});
         this.setState({algorithm: nr}, () => {
             let maze = [];
             let saveMaze = this.state.saveMaze;
@@ -77,7 +79,7 @@ class App extends React.Component {
     }
 
     componentDidMount(){
-        animation = new Animation(this.changeState, this.state.algorithm);
+        animation = new Animation(this.changeState, this.state.algorithm, this.addToStepCount);
         this.createMaze();
     }
 
@@ -95,7 +97,12 @@ class App extends React.Component {
 
     newMazeClick = () => {
         if(this.state.animationRunning) return;
+        this.setState({stepCount: 0});
         this.createMaze();
+    }
+
+    addToStepCount = (a) => {
+        this.setState({stepCount: this.state.stepCount + a});
     }
 
   render() {
@@ -115,6 +122,7 @@ class App extends React.Component {
                 <Main
                     maze={this.state.maze}
                     algorithm={this.state.algorithm}
+                    steps={this.state.stepCount}
                 />
             </div>
   )};
