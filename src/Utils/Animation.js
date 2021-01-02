@@ -2,6 +2,7 @@ import {getDfsSteps} from "../Algorithms/Dfs";
 import {getDijkstra} from "../Algorithms/Dijkstra";
 import {getTremaux} from "../Algorithms/Tremaux";
 import {getGreedy} from "../Algorithms/GreedySearch";
+import * as path from "path";
 
 class Animation {
     setState;
@@ -57,57 +58,56 @@ class Animation {
     }
 
     startAnimation() {
+        let stepFunction;
+        let pathFunction;
+        let values;
+
         switch (this.algorithm) {
             case 0: {
                 if (this.steps.length === 0) {
-                    let values = getDfsSteps(this.maze.slice(0), this.start, this.end);
-                    this.steps = values.steps;
-                    this.path = values.path;
+                    values = getDfsSteps(this.maze.slice(0), this.start, this.end);
                 }
-                this.pathNumber = 5;
-                this.setState({animationRunning: true});
-                this.animate(this.dfsStep, this.pathStepBack);
-                return true;
+                stepFunction = this.dfsStep;
+                pathFunction = this.pathStepBack;
+                break;
             }
             case 1: {
                 if (this.steps.length === 0) {
-                    let values = getDijkstra(this.maze.slice(0), this.start, this.end);
-                    this.steps = values.steps;
-                    this.path = values.path;
+                    values = getDijkstra(this.maze.slice(0), this.start, this.end);
                 }
-                this.pathNumber = 5;
-                this.setState({animationRunning: true});
-                this.animate(this.dijkstraStep, this.pathStepBack);
-                return true;
+                stepFunction = this.dijkstraStep;
+                pathFunction = this.pathStepBack;
+                break;
             }
             case 2: {
                 if (this.steps.length === 0) {
-                    let values = getTremaux(this.maze.slice(0), this.start, this.end);
-                    this.steps = values.steps;
-                    this.path = values.path;
+                    values = getTremaux(this.maze.slice(0), this.start, this.end);
                 }
-                this.pathNumber = 5;
-                this.setState({animationRunning: true});
-                this.animate(this.tremauxStep, this.pathStepFront);
-                return true;
+                stepFunction = this.tremauxStep;
+                pathFunction = this.pathStepFront;
+                break;
             }
             case 3: {
                 if (this.steps.length === 0) {
-                    let values = getGreedy(this.maze.slice(0), this.start, this.end);
-                    this.steps = values.steps;
-                    this.path = values.path;
+                    values = getGreedy(this.maze.slice(0), this.start, this.end);
                 }
-
-                this.pathNumber = 5;
-                this.setState({animationRunning: true});
-                this.animate(this.greedyStep, this.pathStepBack);
-                return true;
+                stepFunction = this.greedyStep;
+                pathFunction = this.pathStepBack;
+                break;
             }
             default: {
                 this.setState({animationRunning: false});
                 return false;
             }
         }
+
+        if(this.steps.length === 0) {
+            this.steps = values.steps;
+            this.path = values.path;
+        }
+        this.pathNumber = 5;
+        this.setState({animationRunning: true});
+        this.animate(stepFunction, pathFunction);
     }
 
     endAnimation(finished, pathFunc) {
@@ -184,7 +184,6 @@ class Animation {
 
                 let mark = lastArr[0];
                 if(mark !== null && mark.markedX !== undefined && mark.markedY !== undefined) {
-                    console.log(mark);
                     this.maze[mark.markedX][mark.markedY] = mark.markCount;
                 }
             }
