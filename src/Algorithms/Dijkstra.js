@@ -16,7 +16,8 @@ function dijkstra() {
 
         if(wasHere[elem.x][elem.y] === true) continue;
         wasHere[elem.x][elem.y] = true;
-        steps.push(elem);
+        if(steps[elem.distance] === undefined) steps[elem.distance] = [];
+        steps[elem.distance].push(elem);
 
         if(elem.x === end[0] && elem.y === end[1]) {
             do {
@@ -60,7 +61,7 @@ function getDijkstra(m, s, e) {
     dijkstra();
 
     steps.shift();
-    steps.pop();
+    steps[steps.length-1].pop();
     path.shift();
     path.pop();
 
