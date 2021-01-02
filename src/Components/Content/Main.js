@@ -26,7 +26,10 @@ class Main extends React.Component {
         if(this.props.solved === true) className += " solved";
         return (
             <div id="mainDiv" className={className}>
-                <div id="mazeGrid">{this.printMaze()}</div>
+                <div id="mazeGrid">
+                    {this.printMaze()}
+                    <div id="stepCountDiv">steps: {this.props.steps}</div>
+                </div>
                 <div id="footer">by <a href="http://www.nilslambertz.de" target="_blank" rel="noopener noreferrer">nils lambertz</a></div>
             </div>
         )
