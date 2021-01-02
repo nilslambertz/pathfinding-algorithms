@@ -74,12 +74,10 @@ class Animation {
                     let values = getDijkstra(this.maze.slice(0), this.start, this.end);
                     this.steps = values.steps;
                     this.path = values.path;
-                    this.count = 0;
-                    this.dijkstraMax = this.steps.length-1;
                 }
-                this.pathNumber = 4;
+                this.pathNumber = 5;
                 this.setState({animationRunning: true});
-                this.animate(this.dijkstraStep, this.pathStepFront);
+                this.animate(this.dijkstraStep, this.pathStepBack);
                 return true;
             }
             case 2: {
@@ -242,28 +240,9 @@ class Animation {
     }
 
     dijkstraStep = () => {
-        let arr = this.steps.shift();
-        let c = this.count;
-        let val = this.pickColor(c);
-        for(let elem of arr) {
-            this.maze[elem.x][elem.y] = val;
-        }
-        this.maze[this.end[0]][this.end[1]] = 3;
-        this.count++;
+        let elem = this.steps.shift();
+        this.maze[elem.x][elem.y] = 4;
         this.setState({maze: this.maze});
-    }
-
-    pickColor = (c) => {
-        let firstColor = [129,255,0];
-        let secondColor = [255,76,0];
-        let diffR = secondColor[0] - firstColor[0];
-        let diffG = secondColor[1] - firstColor[1];
-        let diffB = secondColor[2] - firstColor[2];
-        let percent = c / this.dijkstraMax;
-        let newR = firstColor[0] + Math.round(diffR * percent);
-        let newG = firstColor[1] + Math.round(diffG * percent);
-        let newB = firstColor[2] + Math.round(diffB * percent);
-        return [newR, newG, newB];
     }
 }
 
