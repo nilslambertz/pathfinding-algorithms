@@ -240,8 +240,10 @@ class Animation {
     }
 
     dijkstraStep = () => {
-        let elem = this.steps.shift();
-        this.maze[elem.x][elem.y] = 4;
+        let arr = this.steps.shift();
+        for(let elem of arr) {
+            this.maze[elem.x][elem.y] = 4;
+        }
         this.setState({maze: this.maze});
     }
 }
