@@ -3,6 +3,7 @@ import {getDijkstra} from "../Algorithms/Dijkstra";
 import {getTremaux} from "../Algorithms/Tremaux";
 import {getGreedy} from "../Algorithms/GreedySearch";
 import * as path from "path";
+import {getAStar} from "../Algorithms/AStar";
 
 class Animation {
     setState;
@@ -95,6 +96,14 @@ class Animation {
                 pathFunction = this.pathStepBack;
                 break;
             }
+            case 4: {
+                if (this.steps.length === 0) {
+                    values = getAStar(this.maze.slice(0), this.start, this.end);
+                }
+                stepFunction = this.aStarStep;
+                pathFunction = this.pathStepBack;
+                break;
+            }
             default: {
                 this.setState({animationRunning: false});
                 return false;
@@ -157,6 +166,12 @@ class Animation {
     }
 
     greedyStep = () => {
+        let elem = this.steps.shift();
+        this.maze[elem.x][elem.y] = 4;
+        this.setState({maze: this.maze});
+    }
+
+    aStarStep = () => {
         let elem = this.steps.shift();
         this.maze[elem.x][elem.y] = 4;
         this.setState({maze: this.maze});
