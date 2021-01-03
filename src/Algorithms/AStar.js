@@ -70,8 +70,6 @@ function getAStar(m, s, e) {
     path.shift();
     path.pop();
 
-    console.log(path);
-
     return {
         steps: steps,
         path: path
