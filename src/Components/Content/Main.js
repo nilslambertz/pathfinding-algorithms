@@ -4,24 +4,9 @@ import "./MazeElem.css";
 
 class Main extends React.Component {
     render() {
-        let className = "";
-        switch(this.props.algorithm) {
-            case 0: {
-                className += "transition";
-                break;
-            }
-            case 1: {
-                className += "transition";
-                break;
-            }
-            case 2: {
-                className += "noTransition";
-                break;
-            }
-            default: {
-                className += "noTransition";
-                break;
-            }
+        let className = "transition";
+        if(this.props.algorithm === 2) {
+            className = "noTransition";
         }
         if(this.props.solved === true) className += " solved";
         return (
