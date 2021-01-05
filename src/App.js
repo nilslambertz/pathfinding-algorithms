@@ -10,7 +10,7 @@ let animation;
 
 class App extends React.Component {
     state = {
-        algorithm: 2, // chosen algorithm, default tremaux
+        algorithm: 4, // chosen algorithm, default tremaux
         perfectMaze: true,
         animationRunning: false, // if the animation is currently running
         solved: false, // if the maze is solved
