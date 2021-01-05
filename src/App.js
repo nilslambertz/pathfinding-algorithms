@@ -75,7 +75,7 @@ class App extends React.Component {
 
     // Creates new maze
     createMaze = () => {
-        let values = createMaze(this.state.height, this.state.width); // Calls createMaze function in Functions.js
+        let values = createMaze(this.state.height, this.state.width, this.state.perfectMaze); // Calls createMaze function in Functions.js
 
         // Sets maze, starting point and destination
         this.setState({
