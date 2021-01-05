@@ -1,7 +1,7 @@
 import React from 'react';
 import './SettingsBar.css';
 
-function SettingsBar({size, solved, animationRunning, animationSpeed, newMazeClick, animationClick, changeSpeed}) {
+function SettingsBar({size, solved, animationRunning, animationSpeed, newMazeClick, animationClick, changeSpeed, perfectMaze, setPerfectMaze}) {
     const playStyle = {
         color: "lightgreen"
     }
@@ -9,8 +9,8 @@ function SettingsBar({size, solved, animationRunning, animationSpeed, newMazeCli
         color: "orange"
     }
 
-    const newMazeStyle = {
-        color: "lightblue"
+    let perfectMazeStyle = {
+        color: perfectMaze ? "#62D40C" : "#E98A45"
     }
 
     return (
@@ -28,8 +28,17 @@ function SettingsBar({size, solved, animationRunning, animationSpeed, newMazeCli
                 <table className={(animationRunning ? "disabledSetting" : "")}>
                     <tbody>
                     <tr>
-                        <td className="settingsButton" rowSpan="2" style={newMazeStyle} onClick={newMazeClick}>
+                        <td id="newMaze" className="settingsButton" rowSpan="2" onClick={newMazeClick}>
                             new maze
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table className={(animationRunning ? "disabledSetting" : "")}>
+                    <tbody>
+                    <tr>
+                        <td id="perfectMaze" style={perfectMazeStyle} className="settingsButton" rowSpan="2" onClick={() => setPerfectMaze(!perfectMaze)}>
+                            perfect maze: {perfectMaze ? "✅" : "❌"}
                         </td>
                     </tr>
                     </tbody>
