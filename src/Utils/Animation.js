@@ -85,6 +85,10 @@ class Animation {
             case 2: {
                 if (this.steps.length === 0) {
                     values = getTremaux(this.maze.slice(0), this.start, this.end);
+                    if(values === null) {
+                        alert("An error occured (probably becuase perfect maze is set to false!)");
+                        return false;
+                    }
                 }
                 stepFunction = this.tremauxStep;
                 pathFunction = this.pathStepFront;
