@@ -176,8 +176,8 @@ function tremaux() {
                         }
                     }
                     if(minMarks > 1) {
-                        console.log("error");
-                        return;
+                        console.log("Error");
+                        return false;
                     }
                     // marks[minElem.x][minElem.y]++;
                     mark(minElem.x, minElem.y, x, y);
@@ -229,6 +229,7 @@ function tremaux() {
             }
         }
     }
+    return true;
 }
 
 function getTremaux(m, s, e) {
@@ -255,7 +256,12 @@ function getTremaux(m, s, e) {
     y = start[1];
     lastX = null;
     lastY = null;
-    tremaux();
+    let success = tremaux();
+
+    if(!success) {
+        alert("error!");
+        return null;
+    }
 
     x = lastX;
     y = lastY;
