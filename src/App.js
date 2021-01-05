@@ -11,6 +11,7 @@ let animation;
 class App extends React.Component {
     state = {
         algorithm: 2, // chosen algorithm, default tremaux
+        perfectMaze: true,
         animationRunning: false, // if the animation is currently running
         solved: false, // if the maze is solved
         maze: [], // maze-array
@@ -99,6 +100,11 @@ class App extends React.Component {
         this.setState(e);
     }
 
+    // Change perfectMaze-state
+    setPerfectMaze = (v) => {
+        this.setState({perfectMaze: v});
+    }
+
     // Click-handler for start/stop animation button
     animationClick = () => {
         if(this.state.animationRunning) {
@@ -137,6 +143,8 @@ class App extends React.Component {
                     newMazeClick={this.newMazeClick}
                     animationClick={this.animationClick}
                     changeSpeed={this.changeSpeed}
+                    perfectMaze={this.state.perfectMaze}
+                    setPerfectMaze={this.setPerfectMaze}
                 />
                 <Main
                     maze={this.state.maze}
