@@ -31,7 +31,6 @@ export const createMaze = (height, width, perfectMaze) => {
                 maze[i][j] = 0;
             }
         }
-        console.log("----------------");
     }
 
     let startX = Math.floor(Math.random() * maze.length);
