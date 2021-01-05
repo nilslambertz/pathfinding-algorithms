@@ -1,4 +1,4 @@
-export const createMaze = (height, width) => {
+export const createMaze = (height, width, perfectMaze) => {
     let maze = [];
     for(let i = 0; i < height; i++) {
         maze[i] = [];
@@ -8,6 +8,31 @@ export const createMaze = (height, width) => {
     }
 
     primsAlgorithm(maze);
+
+    if(!perfectMaze) {
+        let minRand = 20;
+        let maxRand = 120;
+        let rand = Math.floor(Math.random() * (maxRand - minRand + 1) + minRand);
+        for(let n = 0; n < rand; n++) {
+            let i = Math.floor(Math.random() * height);
+            let j = Math.floor(Math.random() * width);
+
+            if(maze[i][j] === 0) continue;
+
+            let neighbours = getPathNeighbours(maze, i, j);
+            if(neighbours.length !== 2) continue;
+
+            let x = neighbours[0].x - neighbours[1].x;
+            let y = neighbours[0].y - neighbours[1].y;
+
+            if(y === 0) {
+                maze[i][j] = 0;
+            } else if(x === 0) {
+                maze[i][j] = 0;
+            }
+        }
+        console.log("----------------");
+    }
 
     let startX = Math.floor(Math.random() * maze.length);
     let startY = Math.floor(Math.random() * maze[0].length);
