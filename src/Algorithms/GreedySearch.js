@@ -69,7 +69,7 @@ function getGreedy(m, s, e) {
 
     greedySearch(); // Start search
 
-    // Remove starting--node from steps
+    // Remove starting-node from steps
     steps.shift();
 
     // Return values
