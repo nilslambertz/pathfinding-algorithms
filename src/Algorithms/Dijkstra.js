@@ -1,4 +1,4 @@
-import { getPathNeighbours } from "../Utils/Functions";
+import {getPathNeighbours, getPathRecursive} from "../Utils/Functions";
 
 let PriorityQueue = require('priorityqueuejs'); // Using PriorityQueue
 
@@ -20,10 +20,7 @@ function dijkstra() {
 
         // If at destination
         if(elem.x === end[0] && elem.y === end[1]) {
-            // Iterate over parents and push nodes to path
-            do {
-                path.push(elem);
-            } while((elem = elem.parent) !== null);
+            path = getPathRecursive(elem); // Get path
             return;
         }
 
@@ -67,10 +64,8 @@ function getDijkstra(m, s, e) {
 
     dijkstra(); // Start search
 
-    // Remove starting- and desination-node from path and steps
+    // Remove starting-node from steps
     steps.shift();
-    path.shift();
-    path.pop();
 
     // Return values
     return {
