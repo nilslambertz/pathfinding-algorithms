@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/MazeVisualizer/static/css/main.53554e8a.chunk.css",
-    "main.js": "/MazeVisualizer/static/js/main.e8babcab.chunk.js",
-    "main.js.map": "/MazeVisualizer/static/js/main.e8babcab.chunk.js.map",
+    "main.css": "/MazeVisualizer/static/css/main.2161d2fb.chunk.css",
+    "main.js": "/MazeVisualizer/static/js/main.3efcfc23.chunk.js",
+    "main.js.map": "/MazeVisualizer/static/js/main.3efcfc23.chunk.js.map",
     "runtime-main.js": "/MazeVisualizer/static/js/runtime-main.00e76fa0.js",
     "runtime-main.js.map": "/MazeVisualizer/static/js/runtime-main.00e76fa0.js.map",
     "static/js/2.4a709d98.chunk.js": "/MazeVisualizer/static/js/2.4a709d98.chunk.js",
     "static/js/2.4a709d98.chunk.js.map": "/MazeVisualizer/static/js/2.4a709d98.chunk.js.map",
     "index.html": "/MazeVisualizer/index.html",
-    "static/css/main.53554e8a.chunk.css.map": "/MazeVisualizer/static/css/main.53554e8a.chunk.css.map",
+    "static/css/main.2161d2fb.chunk.css.map": "/MazeVisualizer/static/css/main.2161d2fb.chunk.css.map",
     "static/js/2.4a709d98.chunk.js.LICENSE.txt": "/MazeVisualizer/static/js/2.4a709d98.chunk.js.LICENSE.txt",
     "static/media/index.css": "/MazeVisualizer/static/media/backgroundGray.89915284.png"
   },
   "entrypoints": [
     "static/js/runtime-main.00e76fa0.js",
     "static/js/2.4a709d98.chunk.js",
-    "static/css/main.53554e8a.chunk.css",
-    "static/js/main.e8babcab.chunk.js"
+    "static/css/main.2161d2fb.chunk.css",
+    "static/js/main.3efcfc23.chunk.js"
   ]
 }
