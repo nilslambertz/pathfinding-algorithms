@@ -162,7 +162,6 @@ export const getPathNeighbours = (maze, x, y) => {
 
 export function getPathRecursive(elem) {
     let path = [];
-    elem = elem.parent; // First element (destination) shouldn't be in path
 
     // Until element before starting node is reached
     while((elem = elem.parent).parent !== null) {
