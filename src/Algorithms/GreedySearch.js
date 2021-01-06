@@ -1,4 +1,4 @@
-import { getPathNeighbours } from "../Utils/Functions";
+import {getPathNeighbours, getPathRecursive} from "../Utils/Functions";
 
 let steps;
 let maze;
@@ -8,35 +8,42 @@ let path;
 let start;
 let end;
 
+// Get heuristic
 function getDistance(x, y) {
     return Math.abs(x - end[0]) + Math.abs(y - end[1]);
 }
 
+// Greedy-best-first-search
 function greedySearch() {
+    // While elements in stack
     while(stack.length !== 0) {
-        let elem = stack.pop();
+        let elem = stack.pop(); // Get first element
+        if(wasHere[elem.x][elem.y]) continue; // If visited, continue
 
-        if(wasHere[elem.x][elem.y]) continue;
-
-        wasHere[elem.x][elem.y] = true;
-        steps.push(elem);
-
+        // If at destination
         if(elem.x === end[0] && elem.y === end[1]) {
-            do {
-                path.push(elem);
-            } while((elem = elem.parent) !== null);
+            path = getPathRecursive(elem); // Get path
             return;
         }
 
-        let neighbours = getPathNeighbours(maze, elem.x, elem.y);
+        // Set visited and push elem to steps
+        wasHere[elem.x][elem.y] = true;
+        steps.push(elem);
+
+        let neighbours = getPathNeighbours(maze, elem.x, elem.y); // Get neighbours
+
+        // Set distance and parent for all neighbours
         for(let n of neighbours) {
             n.distance = getDistance(n.x, n.y);
             n.parent = elem;
         }
+
+        // Sort neighbours
         neighbours.sort(function(a, b) {
             return b.distance - a.distance;
         });
 
+        // Push sorted list to stack
         for(let n of neighbours) {
             stack.push(n);
         }
@@ -48,7 +55,6 @@ function getGreedy(m, s, e) {
     maze = m;
     steps = [];
     end = e;
-    start = s;
     wasHere = [];
     stack = [];
     path = [];
@@ -58,13 +64,15 @@ function getGreedy(m, s, e) {
             wasHere[i][j] = false;
         }
     }
-    stack.push({x: s[0], y: s[1], parent: null});
 
-    greedySearch();
+    stack.push({x: s[0], y: s[1], parent: null}); // Push starting-node to stack
+
+    greedySearch(); // Start search
+
+    // Remove starting--node from steps
     steps.shift();
-    steps.pop();
-    path.shift();
-    path.pop();
+
+    // Return values
     return {
         steps: steps,
         path: path
