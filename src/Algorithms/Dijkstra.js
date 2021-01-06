@@ -7,7 +7,6 @@ let maze;
 let wasHere;
 let queue;
 let path;
-let start;
 let end;
 
 // Dijkstra's algorithm
