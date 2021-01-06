@@ -1,6 +1,6 @@
 import { getPathNeighbours } from "../Utils/Functions";
 
-let PriorityQueue = require('priorityqueuejs');
+let PriorityQueue = require('priorityqueuejs'); // Using PriorityQueue
 
 let steps;
 let maze;
@@ -10,31 +10,39 @@ let path;
 let start;
 let end;
 
+// Dijkstra's algorithm
 function dijkstra() {
+    // While more elements are in the queue
     while(!queue.isEmpty()) {
-        let elem = queue.deq();
+        let elem = queue.deq(); // Get first element
+        if(wasHere[elem.x][elem.y] === true) continue; // Continue, if already visisted
 
-        if(wasHere[elem.x][elem.y] === true) continue;
-        wasHere[elem.x][elem.y] = true;
-        if(steps[elem.distance] === undefined) steps[elem.distance] = [];
-        steps[elem.distance].push(elem);
+        wasHere[elem.x][elem.y] = true; // Set visisted
 
+        // If at destination
         if(elem.x === end[0] && elem.y === end[1]) {
+            // Iterate over parents and push nodes to path
             do {
                 path.push(elem);
             } while((elem = elem.parent) !== null);
             return;
         }
 
-        let neighbours = getPathNeighbours(maze, elem.x, elem.y);
-        for(let n of neighbours) {
-            if(wasHere[n.x][n.y] === true) continue;
+        // Create array if in new step, add current element to step
+        if(steps[elem.distance] === undefined) steps[elem.distance] = [];
+        steps[elem.distance].push(elem);
 
+        let neighbours = getPathNeighbours(maze, elem.x, elem.y); // Get neighbours
+
+        // For all neighbours
+        for(let n of neighbours) {
+            if(wasHere[n.x][n.y] === true) continue; // Continue, if visited
+
+            // Set new distance and current element as parent and enqueue the neighbour
             n.distance = elem.distance + 1;
             n.parent = elem;
             queue.enq(n);
         }
-
     }
 }
 
@@ -42,7 +50,6 @@ function getDijkstra(m, s, e) {
     maze = m;
     steps = [];
     end = e;
-    start = s;
     wasHere = [];
     path = [];
     for (let i = 0; i < m.length; i++) {
@@ -52,19 +59,21 @@ function getDijkstra(m, s, e) {
         }
     }
 
+    // Initialize PriorityQueue, element with smallest distance is at the front
     queue = new PriorityQueue(function(a, b) {
         return b.distance - a.distance;
     });
 
-    queue.enq({x: s[0], y: s[1], distance: 0, parent: null});
+    queue.enq({x: s[0], y: s[1], distance: 0, parent: null}); // Enqueue first element
 
-    dijkstra();
+    dijkstra(); // Start search
 
+    // Remove starting- and desination-node from path and steps
     steps.shift();
-    steps[steps.length-1].pop();
     path.shift();
     path.pop();
 
+    // Return values
     return {
         steps: steps,
         path: path
