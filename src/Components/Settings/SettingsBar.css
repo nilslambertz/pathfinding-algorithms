@@ -58,3 +58,74 @@
 #newMaze {
     color: lightblue;
 }
+
+input[type=range] {
+    width: 100%;
+    background-color: transparent;
+    -webkit-appearance: none;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    background: #ffffff;
+    border-radius: 25px;
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+    margin-top: -6.25px;
+    width: 16px;
+    height: 16px;
+    background: #1fca2e;
+    border-radius: 49px;
+    cursor: pointer;
+    -webkit-appearance: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ffffff;
+}
+input[type=range]::-moz-range-track {
+    background: #ffffff;
+    border-radius: 25px;
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #1fca2e;
+    border-radius: 49px;
+    cursor: pointer;
+}
+input[type=range]::-ms-track {
+    background: transparent;
+    color: transparent;
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+}
+input[type=range]::-ms-fill-lower {
+    background: #cfcfcf;
+    border-radius: 50px;
+}
+input[type=range]::-ms-fill-upper {
+    background: #ffffff;
+    border-radius: 50px;
+}
+input[type=range]::-ms-thumb {
+    width: 16px;
+    height: 16px;
+    background: #1fca2e;
+    border-radius: 49px;
+    cursor: pointer;
+    margin-top: 0;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: #ffffff;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: #ffffff;
+}
