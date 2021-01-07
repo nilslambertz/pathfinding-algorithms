@@ -12,15 +12,20 @@ let lastY;
 let start;
 let end;
 
+// Returns, if we already visisted this junction
 function neverBeenHere(n, currX, currY) {
+    // For all neighbours
     for(let elem of n) {
+        // If marks at entry of neighbour-path are not 0, return false
         if(getMarks(currX, currY, elem.x, elem.y) > 0) {
             return false;
         }
     }
+    // We didn't visit this junction before, return true
     return true;
 }
 
+// Gets marks between two nodes
 function getMarks(x1, y1, x2, y2) {
     let curr = marks[x1][y1];
     if(x2 < x1) {
@@ -38,6 +43,7 @@ function getMarks(x1, y1, x2, y2) {
     }
 }
 
+// Sets mark between two nodes
 function mark(x1, y1, x2, y2) {
     let curr = marks[x1][y1];
     let from = marks[x2][y2];
@@ -60,36 +66,52 @@ function mark(x1, y1, x2, y2) {
     }
 }
 
-
+// Tremaux-algorithm
 function tremaux() {
-    let found = false;
-    while(!found) {
-        let n = getPathNeighbours(maze, x, y);
+    let found = false; // If we found the exit
 
+    // While not found
+    while(!found) {
+        let n = getPathNeighbours(maze, x, y); // Get neighbours
+
+        // If at the starting-node
         if(lastX === null && lastY === null) {
+            // Get random neighbour
             let rand = Math.floor(Math.random() * n.length);
             let next = n[rand];
-            steps[count] = [];
+
+            steps[count] = []; // Initialize first step-array
+
+            // If we are at a junction
             if(n.length > 2) {
-                mark(next.x, next.y, x, y);
+                mark(next.x, next.y, x, y); // Mark entry
+
+                // Push junction to steps
                 steps[count].push({
                     junctionX: x,
                     junctionY: y
                 });
+
+                // Increase count
                 count++;
                 steps[count] = [];
+
+                // Push marked-coordiantes and markCount to steps
                 steps[count].push({
                     markedX: next.x,
                     markedY: next.y,
                     markCount: Object.assign({},marks[next.x][next.y])
                 });
             } else {
+                // If not at junction, push current element (and null as previous)
                 steps[count].push(null);
                 steps[count].push({
                     x: x,
                     y: y
                 });
             }
+
+            // Set current coordinates to last and next to current
             lastX = x;
             lastY = y;
             x = next.x;
