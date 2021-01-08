@@ -33,22 +33,22 @@ class Animation {
         this.algorithmList = {
             "a*": {
                 getSteps: getAStar,
-                step: this.aStarStep,
+                step: this.defaultStep,
                 path: this.pathStepBack
             },
             "dfs": {
                 getSteps: getDfsSteps,
-                step: this.dfsStep,
+                step: this.arrayStep,
                 path: this.pathStepBack
             },
             "dijkstra": {
                 getSteps: getDijkstra,
-                step: this.dijkstraStep,
+                step: this.arrayStep,
                 path: this.pathStepBack
             },
             "greedy": {
                 getSteps: getGreedy,
-                step: this.greedyStep,
+                step: this.defaultStep,
                 path: this.pathStepBack
             },
             /*"tremaux": {
@@ -171,21 +171,14 @@ class Animation {
         }, this.speed);
     }
 
-    greedyStep = () => {
+    defaultStep = () => {
         let elem = this.steps.shift();
         this.maze[elem.x][elem.y] = 4;
         this.addCount(1);
         this.setState({maze: this.maze});
     }
 
-    aStarStep = () => {
-        let elem = this.steps.shift();
-        this.maze[elem.x][elem.y] = 4;
-        this.addCount(1);
-        this.setState({maze: this.maze});
-    }
-
-    dfsStep = () => {
+    arrayStep = () => {
         let arr = this.steps.shift();
         for(let elem of arr) {
             this.maze[elem.x][elem.y] = 4;
@@ -262,15 +255,6 @@ class Animation {
             this.addCount(arr.length-2);
         }
         this.lastElem = arr;
-        this.setState({maze: this.maze});
-    }
-
-    dijkstraStep = () => {
-        let arr = this.steps.shift();
-        for(let elem of arr) {
-            this.maze[elem.x][elem.y] = 4;
-        }
-        this.addCount(arr.length);
         this.setState({maze: this.maze});
     }
 }
