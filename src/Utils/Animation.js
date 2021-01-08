@@ -2,7 +2,6 @@ import {getDfsSteps} from "../Algorithms/Dfs";
 import {getDijkstra} from "../Algorithms/Dijkstra";
 import {getTremaux} from "../Algorithms/Tremaux";
 import {getGreedy} from "../Algorithms/GreedySearch";
-import * as path from "path";
 import {getAStar} from "../Algorithms/AStar";
 
 class Animation {
@@ -11,6 +10,7 @@ class Animation {
     steps;
     path;
     algorithm;
+    algorithmList;
     speed;
     interval;
     start;
@@ -18,22 +18,67 @@ class Animation {
     pathAnimating;
     count;
     dijkstraMax;
-    pathNumber;
+    pathNumber = 5;
     lastElem;
     addCount;
+    getStepFunction;
+    stepFunction;
+    pathFunction;
 
     constructor(setState, algorithm, addCountFunction) {
         this.setState = setState;
-        this.algorithm = algorithm;
         this.speed = 5;
-        this.steps = [];
         this.addCount = addCountFunction;
+
+        this.algorithmList = {
+            "a*": {
+                getSteps: getAStar,
+                step: this.aStarStep,
+                path: this.pathStepBack
+            },
+            "dfs": {
+                getSteps: getDfsSteps,
+                step: this.dfsStep,
+                path: this.pathStepBack
+            },
+            "dijkstra": {
+                getSteps: getDijkstra,
+                step: this.dijkstraStep,
+                path: this.pathStepBack
+            },
+            "greedy": {
+                getSteps: getGreedy,
+                step: this.greedyStep,
+                path: this.pathStepBack
+            },
+            /*"tremaux": {
+                getSteps: getTremaux,
+                step: this.tremauxStep,
+                path: this.pathStepFront
+            }*/
+        }
+
+        this.changeAlgorithm(algorithm);
+    }
+
+    getAlgorithmTitles = () => {
+        return Object.keys(this.algorithmList);
     }
 
     changeAlgorithm(algo, maze) {
+        if(maze !== undefined) {
+            this.maze = maze;
+        }
+
+        this.getStepFunction = this.algorithmList[algo].getSteps;
+        this.pathFunction = this.algorithmList[algo].path;
+        this.stepFunction = this.algorithmList[algo].step;
+
         this.algorithm = algo;
         this.steps = [];
-        this.maze = maze;
+        this.path = [];
+
+        this.setState({stepCount: 0});
     }
 
     changeAlgorithmSafe(nr) {
@@ -61,68 +106,23 @@ class Animation {
     }
 
     startAnimation() {
-        let stepFunction;
-        let pathFunction;
-        let values;
-
-        switch (this.algorithm) {
-            case 0: {
-                if (this.steps.length === 0) {
-                    values = getDfsSteps(this.maze.slice(0), this.start, this.end);
-                }
-                stepFunction = this.dfsStep;
-                pathFunction = this.pathStepBack;
-                break;
-            }
-            case 1: {
-                if (this.steps.length === 0) {
-                    values = getDijkstra(this.maze.slice(0), this.start, this.end);
-                }
-                stepFunction = this.dijkstraStep;
-                pathFunction = this.pathStepBack;
-                break;
-            }
-            case 2: {
-                if (this.steps.length === 0) {
-                    values = getTremaux(this.maze.slice(0), this.start, this.end);
-                    if(values === null) {
-                        alert("An error occured (probably becuase perfect maze is set to false!)");
-                        return false;
-                    }
-                }
-                stepFunction = this.tremauxStep;
-                pathFunction = this.pathStepFront;
-                break;
-            }
-            case 3: {
-                if (this.steps.length === 0) {
-                    values = getGreedy(this.maze.slice(0), this.start, this.end);
-                }
-                stepFunction = this.greedyStep;
-                pathFunction = this.pathStepBack;
-                break;
-            }
-            case 4: {
-                if (this.steps.length === 0) {
-                    values = getAStar(this.maze.slice(0), this.start, this.end);
-                }
-                stepFunction = this.aStarStep;
-                pathFunction = this.pathStepBack;
-                break;
-            }
-            default: {
-                this.setState({animationRunning: false});
-                return false;
-            }
+        if(this.steps.length !== 0) {
+            this.animate(this.stepFunction, this.pathFunction)
+            return true;
         }
 
-        if(this.steps.length === 0) {
-            this.steps = values.steps;
-            this.path = values.path;
+        if(this.stepFunction === undefined || this.pathFunction === undefined) {
+            alert("Error");
+            return false;
         }
-        this.pathNumber = 5;
+
+        let values = this.getStepFunction(this.maze.slice(0), this.start, this.end);
+        this.steps = values.steps;
+        this.path = values.path;
+
         this.setState({animationRunning: true});
-        this.animate(stepFunction, pathFunction);
+        this.animate(this.stepFunction, this.pathFunction);
+        return true;
     }
 
     endAnimation(finished, pathFunc) {
