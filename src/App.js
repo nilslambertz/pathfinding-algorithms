@@ -10,7 +10,8 @@ let animation;
 
 class App extends React.Component {
     state = {
-        algorithm: 4, // chosen algorithm, default tremaux
+        algorithm: "a*", // chosen algorithm, default tremaux
+        algorithmList: [],
         perfectMaze: true,
         animationRunning: false, // if the animation is currently running
         solved: false, // if the maze is solved
@@ -27,13 +28,12 @@ class App extends React.Component {
     }
 
     // Sets the algorithm
-    setAlgorithm = (nr) => {
-        nr = parseInt(nr);
-        if(nr === this.state.algorithm) return; // If current algorithm was chosen, do nothing
+    setAlgorithm = (algo) => {
+        if(algo === this.state.algorithm) return; // If current algorithm was chosen, do nothing
 
         // Reset stepCount and set algorithm to new number
         this.setState({stepCount: 0});
-        this.setState({algorithm: nr}, () => {
+        this.setState({algorithm: algo}, () => {
             let maze = []; // Create new maze
             let saveMaze = this.state.saveMaze;
 
@@ -46,7 +46,7 @@ class App extends React.Component {
             }
 
             // Change algorithm-number in Animation
-            animation.changeAlgorithm(nr, maze);
+            animation.changeAlgorithm(algo, maze);
 
             // Set new maze and set solved to false
             this.setState({maze: maze, solved: false});
@@ -92,6 +92,8 @@ class App extends React.Component {
     // Creates new maze when component has mounted
     componentDidMount(){
         animation = new Animation(this.changeState, this.state.algorithm, this.addToStepCount);
+        let algos = animation.getAlgorithmTitles();
+        this.setState({algorithmList: algos});
         this.createMaze();
     }
 
@@ -133,7 +135,7 @@ class App extends React.Component {
   render() {
         return(
             <div className="App">
-                <NavBar algorithm={this.state.algorithm} animationRunning={this.state.animationRunning} setAlgorithm={this.setAlgorithm}/>
+                <NavBar algorithm={this.state.algorithm} algorithmList={this.state.algorithmList} animationRunning={this.state.animationRunning} setAlgorithm={this.setAlgorithm}/>
                 <SettingsBar
                     size={this.state.width-1}
                     solved={this.state.solved}
