@@ -1,15 +1,25 @@
 import React from 'react';
 import './NavBar.css';
-import NavElem from './NavElem';
 
-function NavBar({algorithm, setAlgorithm, animationRunning}) {
+function NavBar({algorithmList, algorithm, setAlgorithm, animationRunning}) {
+
+    function changeAlgorithm(algo) {
+        if(animationRunning) return;
+
+        setAlgorithm(algo);
+    }
+
     return (
         <div id="navbar">
-            <NavElem title="a*" algoNumber="4" setAlgorithm={setAlgorithm} currentAlgorithm={algorithm} animationRunning={animationRunning}/>
-            <NavElem title="dfs" algoNumber="0" setAlgorithm={setAlgorithm} currentAlgorithm={algorithm} animationRunning={animationRunning}/>
-            <NavElem title="dijkstra" algoNumber="1" setAlgorithm={setAlgorithm} currentAlgorithm={algorithm} animationRunning={animationRunning}/>
-            <NavElem title="greedy" algoNumber="3" setAlgorithm={setAlgorithm} currentAlgorithm={algorithm} animationRunning={animationRunning}/>
-            <NavElem title="trémaux" algoNumber="2" setAlgorithm={setAlgorithm} currentAlgorithm={algorithm} animationRunning={animationRunning}/>
+            {algorithmList.map(function(c, i, a) {
+                let className = "navElem";
+                if(c === algorithm) {
+                    className += " active";
+                } else if (animationRunning) {
+                    className += " disabled"
+                }
+                return <div className={className} onClick={() => changeAlgorithm(c)}>{c}</div>;
+            })}
         </div>
     );
 }
