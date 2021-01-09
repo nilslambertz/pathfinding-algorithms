@@ -21,34 +21,6 @@ class Main extends React.Component {
     }
 
     printMaze() {
-        if(this.props.algorithm === "tremaux") {
-            return this.printTremauxMaze();
-        }
-        return this.printDfsMaze();
-    }
-
-    printDfsMaze() {
-        return this.props.maze.map(function(c, i, a) {
-            return c.map(function(c2, i2, a2) {
-                if(c2 === 0) {
-                    return <div className={"mazeElem empty"} key={i+i2}/>;
-                } else if(c2 === 1) {
-                    return <div className={"mazeElem wall"} key={i+i2}/>;
-                } else if(c2 === 2) {
-                    return <div className={"mazeElem start"} key={i+i2}/>;
-                } else if(c2 === 3) {
-                    return <div className={"mazeElem end"} key={i+i2}/>
-                } else if(c2 === 4) {
-                    return <div className={"mazeElem searched"} key={i+i2}/>;
-                } else if(c2 === 5) {
-                    return <div className={"mazeElem correctPath"} key={i+i2}/>;
-                }
-                return <div className={"mazeElem"} key={i+i2}/>;
-            })
-        });
-    }
-
-    printTremauxMaze() {
         return this.props.maze.map(function(c, i, a) {
             return c.map(function(c2, i2, a2) {
                 if(c2 === 0) {
