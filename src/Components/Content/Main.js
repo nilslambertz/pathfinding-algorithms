@@ -5,7 +5,7 @@ import "./MazeElem.css";
 class Main extends React.Component {
     render() {
         let className = "transition";
-        if(this.props.algorithm === 2) {
+        if(this.props.algorithm === "tremaux") {
             className = "noTransition";
         }
         if(this.props.solved === true) className += " solved";
@@ -21,7 +21,7 @@ class Main extends React.Component {
     }
 
     printMaze() {
-        if(this.props.algorithm === 2) {
+        if(this.props.algorithm === "tremaux") {
             return this.printTremauxMaze();
         }
         return this.printDfsMaze();
