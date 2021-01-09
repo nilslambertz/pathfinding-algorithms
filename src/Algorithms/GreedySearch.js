@@ -5,7 +5,6 @@ let maze;
 let wasHere;
 let stack;
 let path;
-let start;
 let end;
 
 // Get heuristic
