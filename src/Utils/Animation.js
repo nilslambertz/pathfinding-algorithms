@@ -107,6 +107,7 @@ class Animation {
 
     startAnimation() {
         if(this.steps.length !== 0) {
+            this.setState({animationRunning: true});
             this.animate(this.stepFunction, this.pathFunction)
             return true;
         }
