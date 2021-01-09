@@ -51,11 +51,11 @@ class Animation {
                 step: this.defaultStep,
                 path: this.pathStepBack
             },
-            /*"tremaux": {
+            "tremaux": {
                 getSteps: getTremaux,
                 step: this.tremauxStep,
                 path: this.pathStepFront
-            }*/
+            }
         }
 
         this.changeAlgorithm(algorithm);
@@ -113,11 +113,17 @@ class Animation {
         }
 
         if(this.stepFunction === undefined || this.pathFunction === undefined) {
-            alert("Error");
+            alert("Error, a needed function is undefined");
             return false;
         }
 
         let values = this.getStepFunction(this.maze.slice(0), this.start, this.end);
+
+        if(values === null) {
+            alert("Error, algorithm could not find destination!");
+            return false;
+        }
+
         this.steps = values.steps;
         this.path = values.path;
 
