@@ -11,7 +11,6 @@ export const createMaze = (height, width, perfectMaze) => {
 
     if(!perfectMaze) {
         let max = 100;
-        let c = 0;
         for(let n = 0; n < max; n++) {
             let elem = getRandomItem(walls);
             let i = parseInt(elem.substring(0, elem.indexOf(",")));
@@ -25,10 +24,8 @@ export const createMaze = (height, width, perfectMaze) => {
 
             if(y === 0) {
                 maze[i][j] = 0;
-                c++;
             } else if(x === 0) {
                 maze[i][j] = 0;
-                c++;
             }
         }
     }
