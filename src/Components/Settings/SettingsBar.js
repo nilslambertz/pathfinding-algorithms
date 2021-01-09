@@ -37,7 +37,10 @@ function SettingsBar({size, solved, animationRunning, animationSpeed, newMazeCli
                 <table className={(animationRunning ? "disabledSetting" : "")}>
                     <tbody>
                     <tr>
-                        <td id="perfectMaze" style={perfectMazeStyle} className="settingsButton" rowSpan="2" onClick={() => setPerfectMaze(!perfectMaze)}>
+                        <td id="perfectMaze" style={perfectMazeStyle} className="settingsButton" rowSpan="2" onClick={() => {
+                            if(animationRunning) return;
+                            setPerfectMaze(!perfectMaze)
+                        }}>
                             perfect maze: {perfectMaze ? "✅" : "❌"}
                         </td>
                     </tr>
