@@ -1,7 +1,7 @@
 import React from 'react';
 import './SettingsBar.css';
 
-function SettingsBar({size, solved, animationRunning, animationSpeed, newMazeClick, animationClick, changeSpeed, perfectMaze, setPerfectMaze}) {
+function SettingsBar({solved, animationRunning, animationSpeed, newMazeClick, animationClick, changeSpeed, perfectMaze, setPerfectMaze}) {
     const playStyle = {
         color: "lightgreen"
     }

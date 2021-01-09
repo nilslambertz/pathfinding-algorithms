@@ -137,7 +137,6 @@ class App extends React.Component {
             <div className="App">
                 <NavBar algorithm={this.state.algorithm} algorithmList={this.state.algorithmList} animationRunning={this.state.animationRunning} setAlgorithm={this.setAlgorithm}/>
                 <SettingsBar
-                    size={this.state.width-1}
                     solved={this.state.solved}
                     animationRunning={this.state.animationRunning}
                     animationSpeed={this.state.animationSpeed}
