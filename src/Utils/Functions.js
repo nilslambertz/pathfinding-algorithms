@@ -7,17 +7,15 @@ export const createMaze = (height, width, perfectMaze) => {
         }
     }
 
-    primsAlgorithm(maze);
+    let walls = primsAlgorithm(maze);
 
     if(!perfectMaze) {
-        let minRand = 20;
-        let maxRand = 120;
-        let rand = Math.floor(Math.random() * (maxRand - minRand + 1) + minRand);
-        for(let n = 0; n < rand; n++) {
-            let i = Math.floor(Math.random() * height);
-            let j = Math.floor(Math.random() * width);
-
-            if(maze[i][j] === 0) continue;
+        let max = 100;
+        let c = 0;
+        for(let n = 0; n < max; n++) {
+            let elem = getRandomItem(walls);
+            let i = parseInt(elem.substring(0, elem.indexOf(",")));
+            let j = parseInt(elem.substring(elem.indexOf(",") + 1));
 
             let neighbours = getPathNeighbours(maze, i, j);
             if(neighbours.length !== 2) continue;
@@ -27,8 +25,10 @@ export const createMaze = (height, width, perfectMaze) => {
 
             if(y === 0) {
                 maze[i][j] = 0;
+                c++;
             } else if(x === 0) {
                 maze[i][j] = 0;
+                c++;
             }
         }
     }
@@ -57,38 +57,53 @@ export const createMaze = (height, width, perfectMaze) => {
 }
 
 function primsAlgorithm(maze) {
+    let remainingWalls = new Set();
+    for(let i = 0; i < maze.length; i++) {
+        for (let j = 0; j < maze[i].length; j++) {
+            remainingWalls.add(i + "," + j);
+        }
+    }
+
     let walls = new Set();
     let firstX = Math.floor(Math.random() * maze.length);
     if(firstX % 2 === 1) firstX--;
     let firstY = Math.floor(Math.random() * maze[0].length);
     if(firstY % 2 === 1) firstY--;
-    addWalls(firstX,firstY, walls, maze);
+    addWalls(firstX,firstY, walls, remainingWalls, maze);
     maze[firstX][firstY] = 0;
+    remainingWalls.delete(firstX + "," + firstY);
     while(walls.size > 0) {
         let random = getRandomItem(walls);
         let x = parseInt(random.substring(0, random.indexOf(",")));
         let y = parseInt(random.substring(random.indexOf(",") + 1));
         let neighbours = getNeighbours(x, y, maze);
         let randomNeighbour = neighbours.splice(Math.floor(Math.random() * neighbours.length), 1)[0];
-        createPath(x, y, randomNeighbour[0], randomNeighbour[1], maze);
+        createPath(x, y, randomNeighbour[0], randomNeighbour[1], maze, remainingWalls);
         maze[x][y] = 0;
+        remainingWalls.delete(x + "," + y);
         walls.delete(random);
-        addWalls(x, y, walls,maze);
+        addWalls(x, y, walls, remainingWalls, maze);
     }
+
+    return remainingWalls;
 }
 
-function createPath(x1, y1, x2, y2, maze) {
+function createPath(x1, y1, x2, y2, maze, remainingWalls) {
     if(x1 === x2) {
         if(y1 < y2) {
             maze[x1][y1+1] = 0;
+            remainingWalls.delete(x1 + "," + (y1+1));
         } else {
             maze[x1][y1-1] = 0;
+            remainingWalls.delete(x1 + "," + (y1-1));
         }
     } else {
         if(x1 < x2) {
             maze[x1+1][y1] = 0;
+            remainingWalls.delete((x1+1) + "," + y1);
         } else {
             maze[x1-1][y1] = 0;
+            remainingWalls.delete((x1-1) + "," + y1);
         }
     }
 }
@@ -110,7 +125,7 @@ function getNeighbours(x,y, maze) {
     return neighbours;
 }
 
-function addWalls(x,y, walls, maze) {
+function addWalls(x,y, walls, remainingWalls, maze) {
     if(x-2 >= 0 && maze[x-2][y] !== 0) {
         walls.add((x-2) + "," + y);
     }
