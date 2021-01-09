@@ -13,11 +13,11 @@ let start;
 let end;
 
 // Returns, if we already visisted this junction
-function neverBeenHere(n, currX, currY) {
+function neverBeenHere(n, currX, currY, ignoreX, ignoreY) {
     // For all neighbours
     for(let elem of n) {
         // If marks at entry of neighbour-path are not 0, return false
-        if(getMarks(currX, currY, elem.x, elem.y) > 0) {
+        if(getMarks(currX, currY, elem.x, elem.y) > 0 && (elem.x !== ignoreX || elem.y !== ignoreY)) {
             return false;
         }
     }
@@ -142,8 +142,11 @@ function tremaux() {
         } else if(n.length > 2) {
             // If not at starting node and at junction (more than 2 neighbours)
 
+            // Mark exit node before junction
+            markJunctionEnter(lastX, lastY, x, y);
+
             // If never been here
-            if(neverBeenHere(n, x, y)) {
+            if(neverBeenHere(n, x, y, lastX, lastY)) {
                 // Find node where we were in the step before
                 let removeIndex = -1;
                 for(let i = 0; i < n.length; i++) {
@@ -151,13 +154,14 @@ function tremaux() {
                 }
                 n.splice(removeIndex, 1); // Remove the node from neighbours
 
-                // Mark exit node before junction
-                markJunctionEnter(lastX, lastY, x, y);
-
                 // Choose random neighbour as next node and mark entry
                 let rand = Math.floor(Math.random() * n.length);
                 let next = n[rand];
-                mark(next.x, next.y, x, y);
+
+                // If next node is also a junction, don't mark entry (will be done in next step)
+                if(getPathNeighbours(maze, next.x, next.y).length < 3) {
+                    mark(next.x, next.y, x, y);
+                }
 
                 // Set last and next node
                 lastX = x;
@@ -173,9 +177,6 @@ function tremaux() {
                 });
             } else {
                 // If we have been at this junction before
-
-                // Mark exit node before junction
-                markJunctionEnter(lastX, lastY, x, y);
 
                 // If last node currently has one mark, enter it
                 if(getMarks(x, y, lastX, lastY) === 1) {
@@ -216,7 +217,10 @@ function tremaux() {
                         return false;
                     }
 
-                    mark(minElem.x, minElem.y, x, y); // Mark entry to next path
+                    // If next node is also a junction, don't mark entry (will be done in next step)
+                    if(getPathNeighbours(maze, minElem.x, minElem.y).length < 3) {
+                        mark(minElem.x, minElem.y, x, y); // Mark entry to next path
+                    }
 
                     // Set last and next node
                     lastX = x;
@@ -282,6 +286,7 @@ function tremaux() {
             }
         }
     }
+    console.log("FOUND EXIT");
     return true;
 }
 
@@ -317,7 +322,7 @@ function getTremaux(m, s, e) {
 
     // If an error occured
     if(!success) {
-        alert("Error while running algorithm");
+        console.log("Error, Tremaux didn't find destination!");
         return null;
     }
 
