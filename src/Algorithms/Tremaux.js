@@ -66,6 +66,29 @@ function mark(x1, y1, x2, y2) {
     }
 }
 
+// Marks exit node before junction and updates steps
+function markJunctionEnter(lastX, lastY, x, y) {
+    mark(lastX, lastY, x, y); // Mark exit of last path
+
+    // Push mark to steps
+    steps[count].push({
+        markedX: lastX,
+        markedY: lastY,
+        markCount: Object.assign({},marks[lastX][lastY])
+    });
+
+    count++; // Update count because one "step"/path has ended
+    // Add current junction to steps
+    steps[count] = {
+        junctionX: x,
+        junctionY: y
+    };
+
+    // Update count for next path and create array in steps
+    count++;
+    steps[count] = [];
+}
+
 // Tremaux-algorithm
 function tremaux() {
     let found = false; // If we found the exit
@@ -117,62 +140,48 @@ function tremaux() {
             x = next.x;
             y = next.y;
         } else if(n.length > 2) {
+            // If not at starting node and at junction (more than 2 neighbours)
+
+            // If never been here
             if(neverBeenHere(n, x, y)) {
+                // Find node where we were in the step before
                 let removeIndex = -1;
                 for(let i = 0; i < n.length; i++) {
                     if(n[i].x === lastX && n[i].y === lastY) removeIndex = i;
                 }
-                n.splice(removeIndex, 1);
-                mark(lastX, lastY, x, y);
+                n.splice(removeIndex, 1); // Remove the node from neighbours
 
-                steps[count].push({
-                    markedX: lastX,
-                    markedY: lastY,
-                    markCount: Object.assign({},marks[lastX][lastY])
-                });
-                count++;
-                steps[count] = {
-                    junctionX: x,
-                    junctionY: y
-                };
-                count++;
-                steps[count] = [];
-                // console.log("marked " + lastX + ":" + lastY);
+                // Mark exit node before junction
+                markJunctionEnter(lastX, lastY, x, y);
+
+                // Choose random neighbour as next node and mark entry
                 let rand = Math.floor(Math.random() * n.length);
                 let next = n[rand];
-                //  marks[next.x][next.y]++;
                 mark(next.x, next.y, x, y);
-                //  console.log("marked " + next.x + ":" + next.y);
+
+                // Set last and next node
                 lastX = x;
                 lastY = y;
                 x = next.x;
                 y = next.y;
 
+                // Push marked entry to steps
                 steps[count].push({
                     markedX: next.x,
                     markedY: next.y,
                     markCount: Object.assign({},marks[next.x][next.y])
                 });
             } else {
-                // marks[lastX][lastY]++;
-                mark(lastX, lastY, x, y);
-                steps[count].push({
-                    markedX: lastX,
-                    markedY: lastY,
-                    markCount: Object.assign({},marks[lastX][lastY])
-                });
-                count++;
-                steps[count] = {
-                    junctionX: x,
-                    junctionY: y
-                };
-                count++;
-                steps[count] = [];
-                //  console.log("marked " + lastX + ":" + lastY);
+                // If we have been at this junction before
+
+                // Mark exit node before junction
+                markJunctionEnter(lastX, lastY, x, y);
+
+                // If last node currently has one mark, enter it
                 if(getMarks(x, y, lastX, lastY) === 1) {
-                    //  marks[lastX][lastY]++;
-                    mark(lastX, lastY, x, y);
-                    //    console.log("marked " + lastX + ":" + lastY);
+                    mark(lastX, lastY, x, y); // Mark node again
+
+                    // Set last and next node
                     let tempX = lastX;
                     lastX = x;
                     x = tempX;
@@ -181,15 +190,18 @@ function tremaux() {
                     lastY = y;
                     y = tempY;
 
+                    // Push marked entry to steps
                     steps[count].push({
                         markedX: lastX,
                         markedY: lastY,
                         markCount: Object.assign({},marks[lastX][lastY])
                     });
                 } else {
+                    // If last node already has two marks
+
+                    // Find node with lowest number of marks
                     let minMarks = 2;
-                    let minElem = null;
-                    //   console.log(n);
+                    let minElem = undefined;
                     let temp = null;
                     for(let i = 0; i < n.length; i++) {
                         if((temp = getMarks(n[i].x, n[i].y, x, y)) < minMarks) {
@@ -197,18 +209,22 @@ function tremaux() {
                             minMarks = temp;
                         }
                     }
-                    if(minMarks > 1) {
-                        console.log("Error");
+
+                    // If every node has 2 marks, an error has occurred
+                    if(minMarks > 1 || minElem === undefined) {
+                        console.log("Error, all nodes at junction " + x + ":" + y + " are already marked twice!");
                         return false;
                     }
-                    // marks[minElem.x][minElem.y]++;
-                    mark(minElem.x, minElem.y, x, y);
-                    //  console.log("marked " + minElem.x + ":" + minElem.y);
+
+                    mark(minElem.x, minElem.y, x, y); // Mark entry to next path
+
+                    // Set last and next node
                     lastX = x;
                     lastY = y;
                     x = minElem.x;
                     y = minElem.y;
 
+                    // Push marked entry to steps
                     steps[count].push({
                         markedX: minElem.x,
                         markedY: minElem.y,
@@ -217,12 +233,18 @@ function tremaux() {
                 }
             }
         } else if(n.length === 2) {
+            // If inside a path (exactly two neighbours)
+
+            // Push current position to steps
             steps[count].push({
                 x: x,
                 y: y
             });
+
+            // Chose next neighbour (the one we didn't come from)
             for(let elem of n) {
                 if(elem.x !== lastX || elem.y !== lastY) {
+                    // Set last and next node
                     lastX = x;
                     lastY = y;
                     x = elem.x;
@@ -231,17 +253,26 @@ function tremaux() {
                 }
             }
         } else if(n.length === 1) {
+            // If at the end of one path (exactly one neighbour)
+
+            // Push current position to steps
             steps[count].push({
                 x: x,
                 y: y
             });
 
+            // Set last and next node (the one we came from)
             lastX = x;
             lastY = y;
             x = n[0].x;
             y = n[0].y;
+        } else {
+            // If number of neighbours is lower than 1, shouldn't happen
+            console.log("Error, no neighbours found");
+            return false;
         }
 
+        // If we found our destination
         if(x === end[0] && y === end[1]) {
             found = true;
             steps[count].push(null);
@@ -262,6 +293,8 @@ function getTremaux(m, s, e) {
     path = [];
     marks = [];
     count = 0;
+
+    // Initialize marks with 0 in all directions
     for(let i = 0; i < maze.length; i++) {
         marks[i] = [];
         for (let j = 0; j < maze[i].length; j++) {
@@ -274,46 +307,45 @@ function getTremaux(m, s, e) {
         }
     }
 
+    // Set starting node and last to null
     x = start[0];
     y = start[1];
     lastX = null;
     lastY = null;
-    let success = tremaux();
 
+    let success = tremaux(); // Start search
+
+    // If an error occured
     if(!success) {
-        alert("error!");
+        alert("Error while running algorithm");
         return null;
     }
 
+    // Set current node to last before destination and last to destination
     x = lastX;
     y = lastY;
-
-    let visited = [];
-    for (let i = 0; i < maze.length; i++) {
-        visited[i] = [];
-        for (let j = 0; j < maze[i].length; j++) {
-            visited[i][j] = false;
-        }
-    }
-    visited[end[0]][end[1]] = true;
-
     lastX = end[0];
     lastY = end[1];
 
+    // While we are not at our starting node
     while(x !== start[0] || y !== start[1]) {
         if(x === lastX && y === lastY) {
             break;
         }
 
+        // Push current node to path
         path.push({
             x: x,
             y: y
         });
-        visited[x][y] = true;
-        let n = getPathNeighbours(maze, x, y);
+
+        let n = getPathNeighbours(maze, x, y); // Get neighbours
+
+        // If inside path (exactly two neighbours)
         if(n.length === 2) {
+            // Choose the neighbour where we haven't been in the last step
             for(let elem of n) {
-                if(visited[elem.x][elem.y] === false) {
+                if(elem.x !== lastX || elem.y !== lastY) {
                     lastX = x;
                     lastY = y;
                     x = elem.x;
@@ -322,9 +354,18 @@ function getTremaux(m, s, e) {
                 }
             }
         } else {
+            if(n.length === 1) {
+                console.log("Error while getting path");
+                return null;
+            }
+
+            // If at junction
+
             for(let elem of n) {
-                let marks = getMarks(x, y, elem.x, elem.y);
-                if(marks === 1 && visited[elem.x][elem.y] === false) {
+                let marks = getMarks(x, y, elem.x, elem.y); // Get marks
+
+                // Choose the neighbour with exactly one mark and where we haven't been in last step
+                if(marks === 1 && (elem.x !== lastX || elem.y !== lastY)) {
                     lastX = x;
                     lastY = y;
                     x = elem.x;
@@ -335,6 +376,7 @@ function getTremaux(m, s, e) {
         }
     }
 
+    // Return values
     return {
         steps: steps,
         path: path
