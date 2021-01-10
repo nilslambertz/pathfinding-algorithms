@@ -11,8 +11,8 @@ let animation;
 class App extends React.Component {
     state = {
         algorithm: "a*", // chosen algorithm, default tremaux
-        algorithmList: [],
-        perfectMaze: true,
+        algorithmList: [], // list of all algorithms
+        perfectMaze: true, // if maze should be created without loops
         animationRunning: false, // if the animation is currently running
         solved: false, // if the maze is solved
         maze: [], // maze-array
