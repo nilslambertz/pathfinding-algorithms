@@ -286,7 +286,6 @@ function tremaux() {
             }
         }
     }
-    console.log("FOUND EXIT");
     return true;
 }
 
