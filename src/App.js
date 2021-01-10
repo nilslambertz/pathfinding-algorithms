@@ -152,6 +152,7 @@ class App extends React.Component {
                     algorithm={this.state.algorithm}
                     steps={this.state.stepCount}
                 />
+                <div id="footer">by <a href="http://www.nilslambertz.de" target="_blank" rel="noopener noreferrer">nils lambertz</a> - <a href="https://github.com/nilslambertz/MazeVisualizer" target="_blank" rel="noopener noreferrer">source code</a></div>
             </div>
   )};
 }

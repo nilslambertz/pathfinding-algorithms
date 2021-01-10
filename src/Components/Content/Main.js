@@ -15,7 +15,6 @@ class Main extends React.Component {
                     {this.printMaze()}
                     <div id="stepCountDiv">steps: {this.props.steps}</div>
                 </div>
-                <div id="footer">by <a href="http://www.nilslambertz.de" target="_blank" rel="noopener noreferrer">nils lambertz</a> - <a href="https://github.com/nilslambertz/MazeVisualizer" target="_blank" rel="noopener noreferrer">source code</a></div>
             </div>
         )
     }
