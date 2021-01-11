@@ -5,31 +5,32 @@ import {getGreedy} from "../Algorithms/GreedySearch";
 import {getAStar} from "../Algorithms/AStar";
 
 class Animation {
-    setState;
-    maze;
-    steps;
-    path;
-    algorithm;
-    algorithmList;
-    speed;
-    interval;
-    start;
-    end;
-    pathAnimating;
-    count;
-    dijkstraMax;
-    pathNumber = 5;
-    lastElem;
-    addCount;
-    getStepFunction;
-    stepFunction;
-    pathFunction;
+    setState; // SetState-method of App
+    maze; // Maze-array
+    steps; // Steps to find destination
+    path; // Path from start to end
+    algorithm; // Current algorithm
+    algorithmList; // List of all algorithms
+    speed; // Speed of animation
+    interval; // Interval-object used to animate
+    start; // Starting-node
+    end; // Destination-node
+    pathAnimating; // If path is currently animating
+    pathNumber; // Number used to draw maze-elem as path
+    lastElem; // Previous element from steps
+    addCount; // addCount-method from App
+    getStepFunction; // function to get step-array of current algorithm
+    stepFunction; // function to make one step in animation of current algorithm
+    pathFunction; // function to draw path
 
     constructor(setState, algorithm, addCountFunction) {
+        // Initialize values
         this.setState = setState;
         this.speed = 5;
         this.addCount = addCountFunction;
+        this.pathNumber = 5;
 
+        // Create list of algorithms
         this.algorithmList = {
             "a*": {
                 getSteps: getAStar,
@@ -61,6 +62,7 @@ class Animation {
         this.changeAlgorithm(algorithm);
     }
 
+    // Returns all algorithm-titles (for NavBar)
     getAlgorithmTitles = () => {
         return Object.keys(this.algorithmList);
     }
