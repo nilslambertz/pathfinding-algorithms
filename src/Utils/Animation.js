@@ -83,10 +83,6 @@ class Animation {
         this.setState({stepCount: 0});
     }
 
-    changeAlgorithmSafe(nr) {
-        this.algorithm = nr;
-    }
-
     changeMaze(maze, steps, start, end) {
         this.maze = maze;
         this.steps = [];
