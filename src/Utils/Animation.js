@@ -67,28 +67,36 @@ class Animation {
         return Object.keys(this.algorithmList);
     }
 
+    // Changes algorithm and sets maze if passed as argument
     changeAlgorithm(algo, maze) {
+        // Set maze if passed
         if(maze !== undefined) {
             this.maze = maze;
         }
 
+        // Set functions for new algorithm
         this.getStepFunction = this.algorithmList[algo].getSteps;
         this.pathFunction = this.algorithmList[algo].path;
         this.stepFunction = this.algorithmList[algo].step;
 
+        // Set algorithm and reset step- and path-array
         this.algorithm = algo;
         this.steps = [];
         this.path = [];
 
+        // Reset step-count
         this.setState({stepCount: 0});
     }
 
+    // Changes the maze
     changeMaze(maze, steps, start, end) {
+        // Set maze, start- and end-node and reset step-array
         this.maze = maze;
         this.steps = [];
         this.start = start;
         this.end = end;
 
+        // Create saveMaze used when switching algorithms while animation has already started
         let saveMaze = [];
         for(let i = 0; i < maze.length; i++) {
             saveMaze[i] = [];
@@ -99,49 +107,62 @@ class Animation {
         this.setState({maze: this.maze, saveMaze: saveMaze});
     }
 
+    // Changes speed of animation
     changeSpeed(speed) {
         this.speed = 505 - speed;
     }
 
+    // Starts animation
     startAnimation() {
+        // If we have more steps in our array
         if(this.steps.length !== 0) {
-            this.setState({animationRunning: true});
-            this.animate(this.stepFunction, this.pathFunction)
-            return true;
+            this.setState({animationRunning: true}); // Set animation to running
+            this.animate(this.stepFunction, this.pathFunction); // Start animation
+            return true; // Animation has started, return true
         }
 
+        // If one of the needed functions is not set
         if(this.stepFunction === undefined || this.pathFunction === undefined) {
             alert("Error, a needed function is undefined");
-            return false;
+            return false; // Animation couldn't start, return false
         }
 
+        // Get values from current algorithm
         let values = this.getStepFunction(this.maze.slice(0), this.start, this.end);
 
+        // If algorithm encountered error
         if(values === null) {
             alert("Error, algorithm could not find destination!");
-            return false;
+            return false; // Animation couldn't start, return false
         }
 
+        // Set path and steps from received values
         this.steps = values.steps;
         this.path = values.path;
 
-        this.setState({animationRunning: true});
-        this.animate(this.stepFunction, this.pathFunction);
-        return true;
+        this.setState({animationRunning: true}); // Animation is now running
+        this.animate(this.stepFunction, this.pathFunction); // Start animation
+        return true; // Animation has started, return true
     }
 
+    // Stops animation
     endAnimation(finished, pathFunc) {
-        clearInterval(this.interval);
+        clearInterval(this.interval); // Clear interval
+
+        // If step-array is empty, animate path
         if (finished) {
             this.animatePath(pathFunc);
         }
+
+        // If button was pressed and path is not currently animating, set animationRunning to false
         if(this.pathAnimating !== true) {
             this.setState({animationRunning: false});
         }
     }
 
+    // Animates path step-by-step
     animatePath(func) {
-        this.pathAnimating = true;
+        this.pathAnimating = true; // Set pathAnimating to true
         let int = setInterval(() => {
             if(this.path.length === 0) {
                 clearInterval(int);
