@@ -83,6 +83,7 @@ class Animation {
         this.algorithm = algo;
         this.steps = [];
         this.path = [];
+        this.lastElem = undefined;
 
         // Reset step-count
         this.setState({stepCount: 0});
@@ -95,6 +96,7 @@ class Animation {
         this.steps = [];
         this.start = start;
         this.end = end;
+        this.lastElem = undefined;
 
         // Create saveMaze used when switching algorithms while animation has already started
         let saveMaze = [];
@@ -164,124 +166,169 @@ class Animation {
     animatePath(func) {
         this.pathAnimating = true; // Set pathAnimating to true
         let int = setInterval(() => {
+            // If path-animation is finished
             if(this.path.length === 0) {
                 clearInterval(int);
+
+                // Set states and return
                 this.setState({animationRunning: false});
                 this.setState({solved: true});
                 this.pathAnimating = false;
                 return;
             }
-            func();
+            func(); // Call path-drawing function
         }, 10);
     }
 
+    // Animates next step from path with last element from array
     pathStepBack = () => {
         let elem = this.path.pop();
         this.maze[elem.x][elem.y] = this.pathNumber;
         this.setState({maze: this.maze});
     }
 
+    // Animates next step from path with first element from array
     pathStepFront = () => {
         let elem = this.path.shift();
         this.maze[elem.x][elem.y] = this.pathNumber;
         this.setState({maze: this.maze});
     }
 
+    // Animates one step with current algorithm
     animate(step, pathFunc) {
         this.interval = setInterval(() => {
+            // If steps is empty
             if (this.steps.length === 0) {
+                // End animation and return
                 this.endAnimation(true, pathFunc);
                 return;
             }
-            step();
+            step(); // Do one step with current algorithm
         }, this.speed);
     }
 
+    // Does one step
     defaultStep = () => {
-        let elem = this.steps.shift();
-        this.maze[elem.x][elem.y] = 4;
-        this.addCount(1);
-        this.setState({maze: this.maze});
+        let elem = this.steps.shift(); // Get next element from step-array
+        this.maze[elem.x][elem.y] = 4; // Set element to "searched"
+        this.addCount(1); // Add step
+        this.setState({maze: this.maze}); // Set new maze
     }
 
+    // Does multiple steps at once
     arrayStep = () => {
-        let arr = this.steps.shift();
+        let arr = this.steps.shift(); // Get next elements from step-array
+
+        // For each element, set element to searched
         for(let elem of arr) {
             this.maze[elem.x][elem.y] = 4;
         }
-        this.addCount(arr.length);
-        this.setState({maze: this.maze});
+        this.addCount(arr.length); // Add steps
+        this.setState({maze: this.maze}); // Set new maze
     }
 
+    // Does one step with tremaux algorithm
     tremauxStep = () => {
-        let arr = this.steps.shift();
+        let arr = this.steps.shift(); // Get next element from step-array
 
+        // If we found our destination
         if(arr.end === true) {
-            let lastArr = this.lastElem;
+            let lastArr = this.lastElem; // Get last element
+
+            // If last element was a junction
             if(lastArr.junctionX !== undefined && lastArr.junctionY !== undefined) {
-                this.maze[lastArr.junctionX][lastArr.junctionY] = 0;
-                this.addCount(1);
+                this.maze[lastArr.junctionX][lastArr.junctionY] = 0; // Clear last element
             } else {
+                // If last element was a path
+
+                // Clear every element in the path
                 for (let i = 1; i < lastArr.length-1; i++) {
                     this.maze[lastArr[i].x][lastArr[i].y] = 0;
                 }
 
+                // Mark entry to path
                 let mark = lastArr[0];
-                if(mark !== null && mark.markedX !== undefined && mark.markedY !== undefined) {
+                if(mark !== undefined && mark.markedX !== undefined && mark.markedY !== undefined) {
                     this.maze[mark.markedX][mark.markedY] = mark.markCount;
                 }
             }
+
+            // Set new start-, end-node (in case they were overwritten) and maze and return
             this.maze[this.start[0]][this.start[1]] = 2;
             this.maze[this.end[0]][this.end[1]] = 3;
             this.setState({maze: this.maze});
             return;
         }
 
+        // If we are at a junction
         if(arr.junctionX !== undefined && arr.junctionY !== undefined) {
-            this.maze[this.start[0]][this.start[1]] = 2;
-            this.maze[this.end[0]][this.end[1]] = 3;
-            this.maze[arr.junctionX][arr.junctionY] = 4;
-            this.addCount(1);
+            // If lastElem exists
             if(this.lastElem !== undefined) {
                 let lastArr = this.lastElem;
-                let first = lastArr[0];
-                let last = lastArr[lastArr.length-1];
 
-                let x1;
-                let x2;
-                let y1;
-                let y2;
+                // If last element was a junction too, reset it
+                if(lastArr.junctionX !== undefined && lastArr.junctionY !== undefined) {
+                    this.maze[lastArr.junctionX][lastArr.junctionY] = 0;
+                } else {
+                    // If last element was a path
 
-                if(first !== null && (last.markedX !== first.markedX || last.markedY !== first.markedY)) {
-                    if(first.markedX !== null && first.markedY !== null) {
-                        x1 = first.markedX;
-                        y1 = first.markedY;
-                        this.maze[x1][y1] = first.markCount;
+                    let first = lastArr[0]; // First element of array is number of marks at entry
+                    let last = lastArr[lastArr.length - 1]; // Last element of array is number of marks at exit
+
+                    let x1, x2, y1, y2; // Coordinates of entry and exit
+
+                    // Set marks on entry
+                    if (first !== undefined && last !== undefined && (last.markedX !== first.markedX || last.markedY !== first.markedY)) {
+                        if (first.markedX !== undefined && first.markedY !== undefined) {
+                            x1 = first.markedX;
+                            y1 = first.markedY;
+                            this.maze[x1][y1] = first.markCount;
+                        }
                     }
-                }
-                x2 = last.markedX;
-                y2 = last.markedY;
-                this.maze[x2][y2] = last.markCount;
 
-                for (let i = 1; i < lastArr.length-1; i++) {
-                    if((lastArr[i].x !== x1 || lastArr[i].y !== y1) && (lastArr[i].x !== x2 || lastArr[i].y !== y2)) {
-                        this.maze[lastArr[i].x][lastArr[i].y] = 0;
+                    // Set marks on exit
+                    if (last !== undefined && last.markedX !== undefined && last.markedY !== undefined) {
+                        x2 = last.markedX;
+                        y2 = last.markedY;
+                        this.maze[x2][y2] = last.markCount;
+                    }
+
+                    // Reset all other nodes in path
+                    for (let i = 1; i < lastArr.length - 1; i++) {
+                        if ((lastArr[i].x !== x1 || lastArr[i].y !== y1) && (lastArr[i].x !== x2 || lastArr[i].y !== y2)) {
+                            this.maze[lastArr[i].x][lastArr[i].y] = 0;
+                        }
                     }
                 }
             }
-        } else {
+
+            // Set start- and end-nodes in case they were overwritten in the last step
             this.maze[this.start[0]][this.start[1]] = 2;
             this.maze[this.end[0]][this.end[1]] = 3;
+
+            // Mark current node as searched and add one step
+            this.maze[arr.junctionX][arr.junctionY] = 4;
+            this.addCount(1);
+        } else {
+            // If we are inside a path
+
+            // If last element was a junction, clear element
             if(this.lastElem !== undefined && this.lastElem.junctionX !== undefined && this.lastElem.junctionY !== undefined) {
                 this.maze[this.lastElem.junctionX][this.lastElem.junctionY] = 0;
             }
+
+            // Set start- and end-nodes in case they were overwritten
+            this.maze[this.start[0]][this.start[1]] = 2;
+            this.maze[this.end[0]][this.end[1]] = 3;
+
+            // Set all nodes inside path to searched
             for(let i = 1; i < arr.length -1; i++) {
                 this.maze[arr[i].x][arr[i].y] = 4;
             }
-            this.addCount(arr.length-2);
+            this.addCount(arr.length-2); // Add number of nodes to count
         }
-        this.lastElem = arr;
-        this.setState({maze: this.maze});
+        this.lastElem = arr; // Set last element
+        this.setState({maze: this.maze}); // Set maze
     }
 }
 
