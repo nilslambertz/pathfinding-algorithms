@@ -110,10 +110,10 @@ function tremaux() {
                 mark(next.x, next.y, x, y); // Mark entry
 
                 // Push junction to steps
-                steps[count].push({
+                steps[count] = {
                     junctionX: x,
                     junctionY: y
-                });
+                };
 
                 // Increase count
                 count++;
@@ -127,7 +127,7 @@ function tremaux() {
                 });
             } else {
                 // If not at junction, push current element (and null as previous)
-                steps[count].push(null);
+                steps[count].push(undefined);
                 steps[count].push({
                     x: x,
                     y: y
