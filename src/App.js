@@ -135,7 +135,7 @@ class App extends React.Component {
   render() {
         return(
             <div className="App">
-                <NavBar algorithm={this.state.algorithm} algorithmList={this.state.algorithmList} animationRunning={this.state.animationRunning} setAlgorithm={this.setAlgorithm}/>
+                <NavBar currentAlgorithm={this.state.algorithm} algorithmList={this.state.algorithmList} animationRunning={this.state.animationRunning} setAlgorithm={this.setAlgorithm}/>
                 <SettingsBar
                     solved={this.state.solved}
                     animationRunning={this.state.animationRunning}
