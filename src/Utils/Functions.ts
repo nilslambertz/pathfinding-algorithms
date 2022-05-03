@@ -1,15 +1,19 @@
-import { PathElem } from "./Types";
+import { CellState, CellStates, PathElem } from "./Types";
 
 export const createMaze = (
   height: number,
   width: number,
   perfectMaze: boolean
-) => {
-  let maze: number[][] = [];
+): {
+  maze: CellState[][];
+  start: [number, number];
+  end: [number, number];
+} => {
+  let maze: CellState[][] = [];
   for (let i = 0; i < height; i++) {
     maze[i] = [];
     for (let j = 0; j < width; j++) {
-      maze[i][j] = 1;
+      maze[i][j] = CellStates.Wall;
     }
   }
 
@@ -59,7 +63,7 @@ export const createMaze = (
   };
 };
 
-function primsAlgorithm(maze: number[][]) {
+function primsAlgorithm(maze: CellState[][]) {
   let remainingWalls = new Set<string>();
   for (let i = 0; i < maze.length; i++) {
     for (let j = 0; j < maze[i].length; j++) {
@@ -106,46 +110,51 @@ function createPath(
   y1: number,
   x2: number,
   y2: number,
-  maze: number[][],
+  maze: CellState[][],
   remainingWalls: Set<string>
 ) {
   if (x1 === x2) {
     if (y1 < y2) {
-      maze[x1][y1 + 1] = 0;
+      maze[x1][y1 + 1] = CellStates.Empty;
       remainingWalls.delete(x1 + "," + (y1 + 1));
     } else {
-      maze[x1][y1 - 1] = 0;
+      maze[x1][y1 - 1] = CellStates.Empty;
       remainingWalls.delete(x1 + "," + (y1 - 1));
     }
   } else {
     if (x1 < x2) {
-      maze[x1 + 1][y1] = 0;
+      maze[x1 + 1][y1] = CellStates.Empty;
       remainingWalls.delete(x1 + 1 + "," + y1);
     } else {
-      maze[x1 - 1][y1] = 0;
+      maze[x1 - 1][y1] = CellStates.Empty;
       remainingWalls.delete(x1 - 1 + "," + y1);
     }
   }
 }
 
-function getNeighbours(x: number, y: number, maze: number[][]) {
+function getNeighbours(x: number, y: number, maze: CellState[][]) {
   let neighbours = [];
-  if (x - 2 >= 0 && maze[x - 2][y] === 0) {
+  if (x - 2 >= 0 && maze[x - 2][y] === CellStates.Empty) {
     neighbours.push([x - 2, y]);
   }
-  if (x + 2 < maze.length && maze[x + 2][y] === 0) {
+  if (x + 2 < maze.length && maze[x + 2][y] === CellStates.Empty) {
     neighbours.push([x + 2, y]);
   }
-  if (y - 2 >= 0 && maze[x][y - 2] === 0) {
+  if (y - 2 >= 0 && maze[x][y - 2] === CellStates.Empty) {
     neighbours.push([x, y - 2]);
   }
-  if (y + 2 < maze[0].length && maze[x][y + 2] === 0) {
+  if (y + 2 < maze[0].length && maze[x][y + 2] === CellStates.Empty) {
     neighbours.push([x, y + 2]);
   }
   return neighbours;
 }
 
-function addWalls(x: number, y: number, walls: Set<string>, maze: number[][]) {
+function addWalls(
+  x: number,
+  y: number,
+  walls: Set<string>,
+  maze: CellState[][]
+) {
   if (x - 2 >= 0 && maze[x - 2][y] !== 0) {
     walls.add(x - 2 + "," + y);
   }
@@ -165,28 +174,32 @@ function getRandomItem(set: Set<string>) {
   return items[Math.floor(Math.random() * items.length)];
 }
 
-export const getPathNeighbours = (maze: number[][], x: number, y: number) => {
+export const getPathNeighbours = (
+  maze: CellState[][],
+  x: number,
+  y: number
+) => {
   let n = [];
 
-  if (x > 0 && maze[x - 1][y] !== 1) {
+  if (x > 0 && maze[x - 1][y] !== CellStates.Wall) {
     n.push({
       x: x - 1,
       y: y,
     });
   }
-  if (x < maze.length - 1 && maze[x + 1][y] !== 1) {
+  if (x < maze.length - 1 && maze[x + 1][y] !== CellStates.Wall) {
     n.push({
       x: x + 1,
       y: y,
     });
   }
-  if (y > 0 && maze[x][y - 1] !== 1) {
+  if (y > 0 && maze[x][y - 1] !== CellStates.Wall) {
     n.push({
       x: x,
       y: y - 1,
     });
   }
-  if (y < maze[0].length - 1 && maze[x][y + 1] !== 1) {
+  if (y < maze[0].length - 1 && maze[x][y + 1] !== CellStates.Wall) {
     n.push({
       x: x,
       y: y + 1,

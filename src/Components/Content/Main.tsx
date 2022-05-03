@@ -1,4 +1,5 @@
 import React from "react";
+import { CellState } from "../../Utils/Types";
 import "./Main.css";
 import "./MazeElem.css";
 
@@ -6,7 +7,7 @@ interface MainProps {
   currentAlgorithm: string;
   steps: number;
   solved: boolean;
-  maze: number[][];
+  maze: CellState[][];
 }
 
 export default function Main({
