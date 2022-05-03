@@ -197,11 +197,10 @@ export const getPathNeighbours = (maze: number[][], x: number, y: number) => {
 
 export function getPathRecursive(elem: PathElem) {
   let path = [];
-
   let tmp: PathElem | undefined = elem;
 
   // Until element before starting node is reached
-  while ((tmp = tmp?.parent)?.parent !== null) {
+  while ((tmp = tmp?.parent)?.parent) {
     path.push(tmp); // Push element to path
   }
   return path;
