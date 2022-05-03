@@ -33,20 +33,20 @@ export const createMaze = (
       let y = neighbours[0].y - neighbours[1].y;
 
       if (y === 0) {
-        maze[i][j] = 0;
+        maze[i][j] = CellStates.Empty;
       } else if (x === 0) {
-        maze[i][j] = 0;
+        maze[i][j] = CellStates.Empty;
       }
     }
   }
 
   let startX = Math.floor(Math.random() * maze.length);
   let startY = Math.floor(Math.random() * maze[0].length);
-  while (maze[startX][startY] !== 0) {
+  while (maze[startX][startY] !== CellStates.Empty) {
     startX = Math.floor(Math.random() * maze.length);
     startY = Math.floor(Math.random() * maze[0].length);
   }
-  maze[startX][startY] = 2;
+  maze[startX][startY] = CellStates.Start;
 
   let endX = Math.floor(Math.random() * maze.length);
   let endY = Math.floor(Math.random() * maze[0].length);
@@ -54,7 +54,7 @@ export const createMaze = (
     endX = Math.floor(Math.random() * maze.length);
     endY = Math.floor(Math.random() * maze[0].length);
   }
-  maze[endX][endY] = 3;
+  maze[endX][endY] = CellStates.End;
 
   return {
     maze: maze,
@@ -77,7 +77,7 @@ function primsAlgorithm(maze: CellState[][]) {
   let firstY = Math.floor(Math.random() * maze[0].length);
   if (firstY % 2 === 1) firstY--;
   addWalls(firstX, firstY, walls, maze);
-  maze[firstX][firstY] = 0;
+  maze[firstX][firstY] = CellStates.Empty;
   remainingWalls.delete(firstX + "," + firstY);
   while (walls.size > 0) {
     let random = getRandomItem(walls);
@@ -96,7 +96,7 @@ function primsAlgorithm(maze: CellState[][]) {
       maze,
       remainingWalls
     );
-    maze[x][y] = 0;
+    maze[x][y] = CellStates.Empty;
     remainingWalls.delete(x + "," + y);
     walls.delete(random);
     addWalls(x, y, walls, maze);
@@ -155,16 +155,16 @@ function addWalls(
   walls: Set<string>,
   maze: CellState[][]
 ) {
-  if (x - 2 >= 0 && maze[x - 2][y] !== 0) {
+  if (x - 2 >= 0 && maze[x - 2][y] !== CellStates.Empty) {
     walls.add(x - 2 + "," + y);
   }
-  if (x + 2 < maze.length && maze[x + 2][y] !== 0) {
+  if (x + 2 < maze.length && maze[x + 2][y] !== CellStates.Empty) {
     walls.add(x + 2 + "," + y);
   }
-  if (y - 2 >= 0 && maze[x][y - 2] !== 0) {
+  if (y - 2 >= 0 && maze[x][y - 2] !== CellStates.Empty) {
     walls.add(x + "," + (y - 2));
   }
-  if (y + 2 < maze[0].length && maze[x][y + 2] !== 0) {
+  if (y + 2 < maze[0].length && maze[x][y + 2] !== CellStates.Empty) {
     walls.add(x + "," + (y + 2));
   }
 }
