@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .text-shadow {
+    text-shadow: 3px 3px 4px black;
+    transition: text-shadow 0.1s;
+  }
+  .text-shadow-blurred {
+    text-shadow: 4px 4px 6px black;
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
