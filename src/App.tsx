@@ -7,6 +7,7 @@ import { createMaze } from "./Utils/Functions";
 import "./App.css";
 import { Algorithms, CellState, StepDetails } from "./Utils/Types";
 import { algorithms } from "./Utils/Algorithms";
+import Footer from "./Components/Footer/Footer";
 
 const NUMBER_OF_COLS = 151;
 const NUMBER_OF_ROWS = 75;
@@ -180,24 +181,7 @@ export default function App() {
         steps={numberOfSteps}
         solved={solved}
       />
-      <div id="footer">
-        by{" "}
-        <a
-          href="http://www.nilslambertz.de"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          nils lambertz
-        </a>{" "}
-        -{" "}
-        <a
-          href="https://github.com/nilslambertz/MazeVisualizer"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          source code
-        </a>
-      </div>
+      <Footer></Footer>
     </div>
   );
 }
