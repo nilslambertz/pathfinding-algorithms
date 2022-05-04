@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Main from "./Components/Content/Main";
 import NavBar from "./Components/Navigation/NavBar";
 import SettingsBar from "./Components/Settings/SettingsBar";
-import Animation from "./Utils/Animation";
 import { createMaze } from "./Utils/Functions";
 import "./App.css";
 import { Algorithms, CellState, StepDetails } from "./Utils/Types";
@@ -15,11 +14,12 @@ const NUMBER_OF_ROWS = 75;
 export default function App() {
   const [maze, setMaze] = useState<CellState[][]>([]);
   const [initialMaze, setInitialMaze] = useState<CellState[][]>([]);
-  const [start, setStart] = useState<[number, number]>();
-  const [end, setEnd] = useState<[number, number]>();
+  const [start, setStart] = useState<[number, number]>([-1, -1]);
+  const [end, setEnd] = useState<[number, number]>([-1, -1]);
   const [solved, setSolved] = useState(false);
 
   const [stepsGenerated, setStepsGenerated] = useState(false);
+  const [path, setPath] = useState<[number, number][]>([]);
   const [, setSteps] = useState<StepDetails[]>([]);
   const [totalNumberOfSteps, setTotalNumberOfSteps] = useState(0);
   const [currentStep, setCurrentStep] = useState<StepDetails | undefined>();
@@ -43,7 +43,11 @@ export default function App() {
   }, [algorithm]);
 
   const resetValues = () => {
-    setMaze(initialMaze?.map((row) => [...row]));
+    setInitialMaze((init) => {
+      setMaze(init?.map((row) => [...row]));
+
+      return init;
+    });
 
     setStepsGenerated(false);
     setSteps([]);
@@ -77,13 +81,14 @@ export default function App() {
   const createNewMaze = () => {
     if (animationRunning) return;
 
-    let { maze, start, end } = createMaze(
-      NUMBER_OF_ROWS,
-      NUMBER_OF_COLS,
-      perfectMaze
-    );
+    let {
+      maze: newMaze,
+      start,
+      end,
+    } = createMaze(NUMBER_OF_ROWS, NUMBER_OF_COLS, perfectMaze);
 
-    setMaze(maze);
+    setInitialMaze(newMaze);
+    setMaze(newMaze);
 
     setStart(start);
     setEnd(end);
@@ -113,7 +118,9 @@ export default function App() {
           const newMaze = prevMaze?.map((row) => [...row]);
 
           if (newMaze) {
-            newMaze[nextStep.y][nextStep.x] = nextStep.nextState;
+            nextStep.cells.forEach(([x, y]) => {
+              newMaze[x][y] = nextStep.nextState;
+            });
 
             setNumberOfSteps((n) => n + 1);
             setCurrentStep(nextStep);
@@ -139,16 +146,18 @@ export default function App() {
 
     if (running) {
       if (!stepsGenerated) {
-        const start = performance.now();
-        const steps = algorithms[algorithm](maze);
-        const end = performance.now();
+        const startTime = performance.now();
+        const { steps, correctPath } = algorithms[algorithm](maze, start, end);
+        const endTime = performance.now();
 
-        const timeElapsed = end - start;
+        const timeElapsed = endTime - startTime;
         setExecutionTime(timeElapsed);
-        setTotalNumberOfSteps(steps.length);
+        setTotalNumberOfSteps(steps?.length ?? 0);
 
-        setSteps(steps);
+        setSteps(steps ?? []);
         setStepsGenerated(true);
+
+        setPath(correctPath ?? []);
       }
 
       setAnimationInterval(setInterval(animationStep, 505 - animationSpeed));
@@ -177,6 +186,8 @@ export default function App() {
       />
       <Main
         maze={maze}
+        start={start}
+        end={end}
         currentAlgorithm={algorithm}
         steps={numberOfSteps}
         solved={solved}
