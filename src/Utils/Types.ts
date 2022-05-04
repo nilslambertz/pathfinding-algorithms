@@ -2,15 +2,23 @@ export interface PathElem {
   parent?: PathElem;
 }
 
+export interface StepsAndCorrectPath {
+  steps?: StepDetails[];
+  correctPath?: [number, number][];
+}
+
 export interface StepDetails {
-  x: number;
-  y: number;
+  cells: [number, number][];
   nextState: CellState;
   // TODO
 }
 
 export type PathfindingAlgorithms = {
-  [key in Algorithms]: (maze: CellState[][]) => StepDetails[];
+  [key in Algorithms]: (
+    maze: CellState[][],
+    start: [number, number],
+    end: [number, number]
+  ) => StepsAndCorrectPath;
 };
 
 export enum Algorithms {
@@ -34,6 +42,8 @@ export enum CellStates {
   Wall,
   Start,
   End,
+  Visited,
+  Correct,
 }
 
 export type CellState =
@@ -41,4 +51,6 @@ export type CellState =
   | CellStates.Wall
   | CellStates.Start
   | CellStates.End
+  | CellStates.Visited
+  | CellStates.Correct
   | CellStateWithBorder;
