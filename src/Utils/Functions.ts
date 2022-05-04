@@ -218,3 +218,10 @@ export function getPathRecursive(elem: PathElem) {
   }
   return path;
 }
+
+export const coordiatesAreTheSame = (
+  first: [number, number],
+  second: [number, number]
+): boolean => {
+  return first[0] === second[0] && first[1] === second[1];
+};
