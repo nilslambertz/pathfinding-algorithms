@@ -1,5 +1,6 @@
 import React from "react";
-import { CellState } from "../../Utils/Types";
+import { coordiatesAreTheSame } from "../../Utils/Functions";
+import { CellState, CellStates } from "../../Utils/Types";
 import "./Main.css";
 import "./MazeElem.css";
 
@@ -7,11 +8,15 @@ interface MainProps {
   currentAlgorithm: string;
   steps: number;
   solved: boolean;
+  start: [number, number];
+  end: [number, number];
   maze: CellState[][];
 }
 
 export default function Main({
   currentAlgorithm,
+  start,
+  end,
   steps,
   solved,
   maze,
@@ -28,61 +33,74 @@ export default function Main({
         className="p-3 pb-0 bg-black bg-opacity-30 grid justify-center"
       >
         {maze.map((row, rowIndex) =>
-          row.map(function (cell: any, colIndex) {
-            if (cell === 0) {
-              return (
-                <div className={"mazeElem empty"} key={rowIndex + colIndex} />
-              );
-            } else if (cell === 1) {
-              return (
-                <div className={"mazeElem wall"} key={rowIndex + colIndex} />
-              );
-            } else if (cell === 2) {
-              return (
-                <div className={"mazeElem start"} key={rowIndex + colIndex} />
-              );
-            } else if (cell === 3) {
-              return (
-                <div className={"mazeElem end"} key={rowIndex + colIndex} />
-              );
-            } else if (cell === 4) {
-              return (
-                <div
-                  className={"mazeElem searched"}
-                  key={rowIndex + colIndex}
-                />
-              );
-            } else if (cell === 5) {
-              return (
-                <div
-                  className={"mazeElem correctPath"}
-                  key={rowIndex + colIndex}
-                />
-              );
-            } else {
-              let width = "2px solid ";
-              let left =
-                cell.left > 0 ? (cell.left > 1 ? "red" : "orange") : "none";
-              let right =
-                cell.right > 0 ? (cell.right > 1 ? "red" : "orange") : "none";
-              let top =
-                cell.top > 0 ? (cell.top > 1 ? "red" : "orange") : "none";
-              let bottom =
-                cell.bottom > 0 ? (cell.bottom > 1 ? "red" : "orange") : "none";
-              let style = {
-                borderBottom: width + bottom,
-                borderLeft: width + left,
-                borderTop: width + top,
-                borderRight: width + right,
-              };
-              return (
-                <div
-                  className={"mazeElem empty"}
-                  style={style}
-                  key={rowIndex + colIndex}
-                />
-              );
+          row.map(function (cell: CellState, colIndex) {
+            const key = rowIndex + "-" + colIndex;
+            let className = "";
+
+            switch (cell) {
+              case CellStates.Start:
+                className = "bg-red-600";
+                break;
+              case CellStates.End:
+                className = "bg-red-600";
+                break;
+              case CellStates.Empty:
+                className = "bg-white";
+                break;
+              case CellStates.Visited:
+                className = "bg-orange-500";
+                break;
+              case CellStates.Correct:
+                return (className = "bg-blue-500");
             }
+
+            if (
+              coordiatesAreTheSame(start, [rowIndex, colIndex]) ||
+              coordiatesAreTheSame(end, [rowIndex, colIndex])
+            ) {
+              className = "bg-red-600";
+            }
+
+            return (
+              <div className={"transition-colors " + className} key={key} />
+            );
+            /*
+            switch (cell) {
+              case CellStates.Wall:
+                return <div key={key} />;
+              case CellStates.Start:
+                return <div className="bg-red-500" key={key} />;
+              case CellStates.End:
+                return <div className="bg-red-500" key={key} />;
+              case CellStates.Visited:
+                return <div className="bg-orange-500" key={key} />;
+              case CellStates.Correct:
+                return <div className="bg-blue-500" key={key} />;
+              default: {
+                let width = "2px solid ";
+                let left =
+                  cell.left > 0 ? (cell.left > 1 ? "red" : "orange") : "none";
+                let right =
+                  cell.right > 0 ? (cell.right > 1 ? "red" : "orange") : "none";
+                let top =
+                  cell.top > 0 ? (cell.top > 1 ? "red" : "orange") : "none";
+                let bottom =
+                  cell.bottom > 0
+                    ? cell.bottom > 1
+                      ? "red"
+                      : "orange"
+                    : "none";
+                let style = {
+                  borderBottom: width + bottom,
+                  borderLeft: width + left,
+                  borderTop: width + top,
+                  borderRight: width + right,
+                };
+                return (
+                  <div className={"mazeElem empty"} style={style} key={key} />
+                );
+              }
+            }*/
           })
         )}
         <span className="col-span-full flex flex-row items-center justify-center text-white">
