@@ -1,5 +1,8 @@
 export interface PathElem {
+  x: number;
+  y: number;
   parent?: PathElem;
+  distance?: number;
 }
 
 export interface StepsAndCorrectPath {
