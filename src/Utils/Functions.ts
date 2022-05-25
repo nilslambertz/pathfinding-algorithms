@@ -178,7 +178,7 @@ export const getPathNeighbours = (
   maze: CellState[][],
   x: number,
   y: number
-) => {
+): PathElem[] => {
   let n = [];
 
   if (x > 0 && maze[x - 1][y] !== CellStates.Wall) {
