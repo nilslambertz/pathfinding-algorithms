@@ -13,16 +13,16 @@ const NUMBER_OF_ROWS = 75;
 
 export default function App() {
   const [maze, setMaze] = useState<CellState[][]>([]);
-  const [initialMaze, setInitialMaze] = useState<CellState[][]>([]);
+  const [, setInitialMaze] = useState<CellState[][]>([]);
   const [start, setStart] = useState<[number, number]>([-1, -1]);
   const [end, setEnd] = useState<[number, number]>([-1, -1]);
   const [solved, setSolved] = useState(false);
 
   const [stepsGenerated, setStepsGenerated] = useState(false);
-  const [path, setPath] = useState<[number, number][]>([]);
-  const [steps, setSteps] = useState<StepDetails[]>([]);
-  const [totalNumberOfSteps, setTotalNumberOfSteps] = useState(0);
-  const [currentStep, setCurrentStep] = useState<StepDetails | undefined>();
+  const [, setPath] = useState<[number, number][]>([]);
+  const [, setSteps] = useState<StepDetails[]>([]);
+  const [, setTotalNumberOfSteps] = useState(0);
+  const [, setCurrentStep] = useState<StepDetails | undefined>();
 
   const [algorithm, setAlgorithm] = useState(Algorithms.aStar);
   const [animationSpeed, setAnimationSpeed] = useState(500);
@@ -32,7 +32,7 @@ export default function App() {
   const [animationRunning, setAnimationRunning] = useState(false);
 
   const [numberOfSteps, setNumberOfSteps] = useState(0);
-  const [executionTime, setExecutionTime] = useState(0);
+  const [, setExecutionTime] = useState(0);
 
   useEffect(() => {
     createNewMaze();
