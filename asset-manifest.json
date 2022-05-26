@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/MazeVisualizer/static/css/main.cb2efa89.css",
-    "main.js": "/MazeVisualizer/static/js/main.342a31ff.js",
-    "static/media/backgroundGray.png": "/MazeVisualizer/static/media/backgroundGray.899152849d3f7936e9ec.png",
-    "index.html": "/MazeVisualizer/index.html",
-    "main.cb2efa89.css.map": "/MazeVisualizer/static/css/main.cb2efa89.css.map",
-    "main.342a31ff.js.map": "/MazeVisualizer/static/js/main.342a31ff.js.map"
+    "main.css": "/pathfinding-algorithms/static/css/main.33142ff0.css",
+    "main.js": "/pathfinding-algorithms/static/js/main.d80d4dff.js",
+    "static/media/backgroundGray.png": "/pathfinding-algorithms/static/media/backgroundGray.899152849d3f7936e9ec.png",
+    "index.html": "/pathfinding-algorithms/index.html",
+    "main.33142ff0.css.map": "/pathfinding-algorithms/static/css/main.33142ff0.css.map",
+    "main.d80d4dff.js.map": "/pathfinding-algorithms/static/js/main.d80d4dff.js.map"
   },
   "entrypoints": [
-    "static/css/main.cb2efa89.css",
-    "static/js/main.342a31ff.js"
+    "static/css/main.33142ff0.css",
+    "static/js/main.d80d4dff.js"
   ]
 }
