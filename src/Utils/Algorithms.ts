@@ -9,5 +9,5 @@ export const algorithms: PathfindingAlgorithms = {
   [Algorithms.dfs]: getDfsSteps,
   [Algorithms.dijkstra]: getDijkstraSteps,
   [Algorithms.greedy]: getGreedySteps,
-  [Algorithms.tremaux]: () => ({}),
+  //[Algorithms.tremaux]: () => ({}),
 };
