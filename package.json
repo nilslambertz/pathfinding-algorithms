@@ -1,7 +1,7 @@
 {
-  "name": "mazevisualizer",
+  "name": "pathfinding-algorithms",
   "version": "0.1.0",
-  "homepage": "https://nilslambertz.github.io/MazeVisualizer",
+  "homepage": "https://nilslambertz.github.io/pathfinding-algorithms",
   "private": true,
   "dependencies": {
     "@types/node": "^17.0.31",
