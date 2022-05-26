@@ -4,7 +4,7 @@ import NavBar from "./Components/Navigation/NavBar";
 import SettingsBar from "./Components/Settings/SettingsBar";
 import { createMaze } from "./Utils/Functions";
 import "./App.css";
-import { Algorithms, CellState, StepDetails } from "./Utils/Types";
+import { Algorithms, CellState, CellStates, StepDetails } from "./Utils/Types";
 import { algorithms } from "./Utils/Algorithms";
 import Footer from "./Components/Footer/Footer";
 
@@ -20,7 +20,7 @@ export default function App() {
 
   const [stepsGenerated, setStepsGenerated] = useState(false);
   const [path, setPath] = useState<[number, number][]>([]);
-  const [, setSteps] = useState<StepDetails[]>([]);
+  const [steps, setSteps] = useState<StepDetails[]>([]);
   const [totalNumberOfSteps, setTotalNumberOfSteps] = useState(0);
   const [currentStep, setCurrentStep] = useState<StepDetails | undefined>();
 
@@ -52,6 +52,7 @@ export default function App() {
     setStepsGenerated(false);
     setSteps([]);
     setCurrentStep(undefined);
+    setPath([]);
 
     setNumberOfSteps(0);
     setSolved(false);
@@ -63,6 +64,7 @@ export default function App() {
     if (animationRunning) return;
 
     setAlgorithm(algo);
+    resetValues();
   };
 
   const changeSpeed = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,6 +107,7 @@ export default function App() {
     if (removeHighlights) {
       setCurrentStep(undefined);
     }
+
     setAnimationRunning(false);
   };
 
@@ -126,7 +129,16 @@ export default function App() {
             setCurrentStep(nextStep);
 
             if (newSteps.length === 0) {
-              endAnimation(true);
+              setPath((currentPath) => {
+                for (let pathStep of currentPath) {
+                  newMaze[pathStep[0]][pathStep[1]] = CellStates.Correct;
+                }
+
+                endAnimation(true);
+                setSolved(true);
+
+                return [];
+              });
             }
           }
 
@@ -147,17 +159,21 @@ export default function App() {
     if (running) {
       if (!stepsGenerated) {
         const startTime = performance.now();
-        const { steps, correctPath } = algorithms[algorithm](maze, start, end);
+        const { steps: stepArr, correctPath } = algorithms[algorithm](
+          maze,
+          start,
+          end
+        );
         const endTime = performance.now();
 
         const timeElapsed = endTime - startTime;
         setExecutionTime(timeElapsed);
-        setTotalNumberOfSteps(steps?.length ?? 0);
+        setTotalNumberOfSteps(stepArr?.length ?? 0);
 
-        setSteps(steps ?? []);
+        setSteps(stepArr);
         setStepsGenerated(true);
 
-        setPath(correctPath ?? []);
+        setPath(correctPath);
       }
 
       setAnimationInterval(setInterval(animationStep, 505 - animationSpeed));
@@ -173,7 +189,7 @@ export default function App() {
       <NavBar
         currentAlgorithm={algorithm}
         animationRunning={animationRunning}
-        setAlgorithm={setAlgorithm}
+        setAlgorithm={changeAlgorithm}
       />
       <SettingsBar
         animationRunning={animationRunning}
