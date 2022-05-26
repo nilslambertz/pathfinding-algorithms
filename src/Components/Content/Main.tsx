@@ -51,7 +51,7 @@ export default function Main({
                 className = "bg-orange-500";
                 break;
               case CellStates.Correct:
-                return (className = "bg-blue-500");
+                className = "bg-blue-500";
             }
 
             if (
