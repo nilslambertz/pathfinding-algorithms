@@ -6,8 +6,8 @@ export interface PathElem {
 }
 
 export interface StepsAndCorrectPath {
-  steps?: StepDetails[];
-  correctPath?: [number, number][];
+  steps: StepDetails[];
+  correctPath: [number, number][];
 }
 
 export interface StepDetails {
@@ -29,7 +29,7 @@ export enum Algorithms {
   dfs = "dfs",
   dijkstra = "dijkstra",
   greedy = "greedy",
-  tremaux = "tremaux",
+  //  tremaux = "tremaux",
 }
 
 export type BorderState = "red" | "orange";

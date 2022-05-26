@@ -49,10 +49,11 @@ function aStar({ maze, start, end, steps, correctPath }: AStarArgs) {
 
     // If at destination
     if (elem.x === end[0] && elem.y === end[1]) {
-      correctPath = getPathRecursive(elem).map((coords) => [
-        coords.x,
-        coords.y,
-      ]);
+      correctPath.push(
+        ...getPathRecursive(elem).map(
+          (coords) => [coords.x, coords.y] as [number, number]
+        )
+      );
       return;
     }
 
