@@ -31,10 +31,12 @@ function aStar({ maze, start, end, steps, correctPath }: AStarArgs) {
     a: PathElemWithHeuristic,
     b: PathElemWithHeuristic
   ) {
-    if (!b.distance || !a.distance || !b.heuristic || !a.heuristic) return 0;
-
     // Best distance + heuristic is at the front
-    return b.distance + b.heuristic - (a.distance + a.heuristic);
+    return (
+      (b.distance ?? 0) +
+      (b.heuristic ?? 0) -
+      ((a.distance ?? 0) + (a.heuristic ?? 0))
+    );
   });
   const visited = maze.map((row) => Array(row.length).fill(false));
 
