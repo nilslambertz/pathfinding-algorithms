@@ -39,19 +39,19 @@ export default function Main({
 
             switch (cell) {
               case CellStates.Start:
-                className = "bg-red-600";
+                className = "bg-red-600 border border-red-600";
                 break;
               case CellStates.End:
-                className = "bg-red-600";
+                className = "bg-red-600 border border-red-600";
                 break;
               case CellStates.Empty:
-                className = "bg-white";
+                className = "bg-white border border-white";
                 break;
               case CellStates.Visited:
-                className = "bg-orange-500";
+                className = "bg-orange-500 border border-orange-500";
                 break;
               case CellStates.Correct:
-                className = "bg-blue-500";
+                className = "bg-blue-500 border border-blue-500";
             }
 
             if (
