@@ -88,7 +88,7 @@ export const getGreedySteps = (
 
   // Return values
   return {
-    steps: steps,
+    steps,
     correctPath,
   };
 };
