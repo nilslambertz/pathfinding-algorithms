@@ -18,7 +18,6 @@ export default function App() {
   const [solved, setSolved] = useState(false);
 
   const [stepsGenerated, setStepsGenerated] = useState(false);
-  const [, setPath] = useState<[number, number][]>([]);
   const [, setSteps] = useState<StepDetails[]>([]);
   const [, setTotalNumberOfSteps] = useState(0);
   const [, setCurrentStep] = useState<StepDetails | undefined>();
@@ -51,7 +50,6 @@ export default function App() {
     setStepsGenerated(false);
     setSteps([]);
     setCurrentStep(undefined);
-    setPath([]);
 
     setNumberOfSteps(0);
     setSolved(false);
@@ -128,16 +126,8 @@ export default function App() {
             setCurrentStep(nextStep);
 
             if (newSteps.length === 0) {
-              setPath((currentPath) => {
-                for (let pathStep of currentPath) {
-                  newMaze[pathStep[0]][pathStep[1]] = CellStates.Correct;
-                }
-
-                endAnimation(true);
-                setSolved(true);
-
-                return [];
-              });
+              endAnimation(true);
+              setSolved(true);
             }
           }
 
@@ -169,10 +159,14 @@ export default function App() {
         setExecutionTime(timeElapsed);
         setTotalNumberOfSteps(stepArr?.length ?? 0);
 
-        setSteps(stepArr);
+        setSteps(
+          stepArr.concat(
+            correctPath
+              .map((p) => ({ cells: [p], nextState: CellStates.Correct }))
+              .reverse()
+          )
+        );
         setStepsGenerated(true);
-
-        setPath(correctPath);
       }
 
       setAnimationInterval(setInterval(animationStep, 505 - animationSpeed));
