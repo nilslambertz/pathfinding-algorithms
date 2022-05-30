@@ -20,7 +20,7 @@ export const createMaze = (
   let walls = primsAlgorithm(maze);
 
   if (!perfectMaze) {
-    let max = 100;
+    let max = 200;
     for (let n = 0; n < max; n++) {
       let elem = getRandomItem(walls);
       let i = parseInt(elem.substring(0, elem.indexOf(",")));
