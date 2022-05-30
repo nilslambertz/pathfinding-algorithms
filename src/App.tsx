@@ -3,7 +3,6 @@ import Main from "./Components/Content/Main";
 import NavBar from "./Components/Navigation/NavBar";
 import SettingsBar from "./Components/Settings/SettingsBar";
 import { createMaze } from "./Utils/Functions";
-import "./App.css";
 import { Algorithms, CellState, CellStates, StepDetails } from "./Utils/Types";
 import { algorithms } from "./Utils/Algorithms";
 import Footer from "./Components/Footer/Footer";
@@ -185,7 +184,7 @@ export default function App() {
   };
 
   return (
-    <div className="App">
+    <div className="w-full h-full flex flex-col bg-green-700 bg-opacity-70">
       <NavBar
         currentAlgorithm={algorithm}
         animationRunning={animationRunning}
