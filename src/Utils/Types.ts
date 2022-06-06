@@ -13,7 +13,7 @@ export interface StepsAndCorrectPath {
 export interface StepDetails {
   cells: [number, number][];
   nextState: CellState;
-  // TODO
+  clearPreviousStep?: boolean;
 }
 
 export type PathfindingAlgorithms = {
@@ -29,11 +29,16 @@ export enum Algorithms {
   dfs = "dfs",
   dijkstra = "dijkstra",
   greedy = "greedy",
-  //  tremaux = "tremaux",
+  tremaux = "tremaux",
 }
 
-export type BorderState = "red" | "orange";
+export enum BorderState {
+  White,
+  Orange,
+  Red,
+}
 export interface CellStateWithBorder {
+  state?: CellState;
   top?: BorderState;
   right?: BorderState;
   bottom?: BorderState;
