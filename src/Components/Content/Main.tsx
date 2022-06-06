@@ -1,4 +1,5 @@
 import React from "react";
+import { CellColors } from "../../Utils/CellColors";
 import { coordiatesAreTheSame } from "../../Utils/Functions";
 import {
   BorderState,
@@ -43,61 +44,65 @@ export default function Main({
             const key = rowIndex + "-" + colIndex;
             let className = "";
 
-            switch (cell) {
-              case CellStates.Start:
-                className = "bg-red-600 border border-red-600";
-                break;
-              case CellStates.End:
-                className = "bg-red-600 border border-red-600";
-                break;
-              case CellStates.Wall:
-                break;
-              case CellStates.Visited:
-                className = "bg-orange-500 border border-orange-500";
-                break;
-              case CellStates.Correct:
-                className = "bg-blue-500 border border-blue-500";
-                break;
-              default: {
-                className = "bg-white border border-white";
-                const borderCell = cell as CellStateWithBorder;
-
-                if (borderCell.state === CellStates.Visited) {
-                  className = "bg-orange-500 border border-orange-500";
-                }
-
-                if (borderCell.top) {
-                  if (borderCell.top === BorderState.Orange)
-                    className += " border-t-orange-500";
-                  if (borderCell.top === BorderState.Red)
-                    className += " border-t-red-500";
-                }
-                if (borderCell.left) {
-                  if (borderCell.left === BorderState.Orange)
-                    className += " border-l-orange-500";
-                  if (borderCell.left === BorderState.Red)
-                    className += " border-l-red-500";
-                }
-                if (borderCell.right) {
-                  if (borderCell.right === BorderState.Orange)
-                    className += " border-r-orange-500";
-                  if (borderCell.right === BorderState.Red)
-                    className += " border-r-red-500";
-                }
-                if (borderCell.bottom) {
-                  if (borderCell.bottom === BorderState.Orange)
-                    className += " border-b-orange-500";
-                  if (borderCell.bottom === BorderState.Red)
-                    className += " border-b-red-500";
-                }
-              }
-            }
-
             if (
               coordiatesAreTheSame(start, [rowIndex, colIndex]) ||
               coordiatesAreTheSame(end, [rowIndex, colIndex])
             ) {
-              className = "bg-red-600";
+              if (coordiatesAreTheSame(start, [rowIndex, colIndex])) {
+                className = `bg-${CellColors.Start} border border-${CellColors.Start}`;
+              } else {
+                className = `bg-${CellColors.End} border border-${CellColors.End}`;
+              }
+            } else {
+              switch (cell) {
+                case CellStates.Start:
+                  className = `bg-${CellColors.Start} border border-${CellColors.Start}`;
+                  break;
+                case CellStates.End:
+                  className = `bg-${CellColors.End} border border-${CellColors.End}`;
+                  break;
+                case CellStates.Wall:
+                  break;
+                case CellStates.Visited:
+                  className = `bg-${CellColors.Visited} border border-${CellColors.Visited}`;
+                  break;
+                case CellStates.Correct:
+                  className = `bg-${CellColors.Correct} border border-${CellColors.Correct}`;
+                  break;
+                default: {
+                  className = `bg-${CellColors.Empty} border border-${CellColors.Empty}`;
+                  const borderCell = cell as CellStateWithBorder;
+
+                  if (borderCell.state === CellStates.Visited) {
+                    className = `bg-${CellColors.Visited} border border-${CellColors.Visited}`;
+                  }
+
+                  if (borderCell.top) {
+                    if (borderCell.top === BorderState.Orange)
+                      className += ` border-t-${CellColors.OrangeBorder}`;
+                    if (borderCell.top === BorderState.Red)
+                      className += ` border-t-${CellColors.RedBorder}`;
+                  }
+                  if (borderCell.left) {
+                    if (borderCell.left === BorderState.Orange)
+                      className += ` border-l-${CellColors.OrangeBorder}`;
+                    if (borderCell.left === BorderState.Red)
+                      className += ` border-l-${CellColors.RedBorder}`;
+                  }
+                  if (borderCell.right) {
+                    if (borderCell.right === BorderState.Orange)
+                      className += ` border-r-${CellColors.OrangeBorder}`;
+                    if (borderCell.right === BorderState.Red)
+                      className += ` border-r-${CellColors.RedBorder}`;
+                  }
+                  if (borderCell.bottom) {
+                    if (borderCell.bottom === BorderState.Orange)
+                      className += ` border-b-${CellColors.OrangeBorder}`;
+                    if (borderCell.bottom === BorderState.Red)
+                      className += ` border-b-${CellColors.RedBorder}`;
+                  }
+                }
+              }
             }
 
             return (
