@@ -3,7 +3,13 @@ import Main from "./Components/Content/Main";
 import NavBar from "./Components/Navigation/NavBar";
 import SettingsBar from "./Components/Settings/SettingsBar";
 import { createMaze } from "./Utils/Functions";
-import { Algorithms, CellState, CellStates, StepDetails } from "./Utils/Types";
+import {
+  Algorithms,
+  CellState,
+  CellStates,
+  CellStateWithBorder,
+  StepDetails,
+} from "./Utils/Types";
 import { algorithms } from "./Utils/Algorithms";
 import Footer from "./Components/Footer/Footer";
 
@@ -117,19 +123,31 @@ export default function App() {
         setMaze((prevMaze) => {
           const newMaze = prevMaze?.map((row) => [...row]);
 
-          if (newMaze) {
-            nextStep.cells.forEach(([x, y]) => {
-              newMaze[x][y] = nextStep.nextState;
-            });
+          setCurrentStep((lastStep) => {
+            if (newMaze) {
+              if (nextStep.clearPreviousStep) {
+                lastStep?.cells?.forEach(([x, y]) => {
+                  newMaze[x][y] = {
+                    ...(lastStep.nextState as CellStateWithBorder),
+                    state: CellStates.Empty,
+                  };
+                });
+              }
 
-            setNumberOfSteps((n) => n + 1);
-            setCurrentStep(nextStep);
+              nextStep.cells.forEach(([x, y]) => {
+                newMaze[x][y] = nextStep.nextState;
+              });
 
-            if (newSteps.length === 0) {
-              endAnimation(true);
-              setSolved(true);
+              setNumberOfSteps((n) => n + 1);
+
+              if (newSteps.length === 0) {
+                endAnimation(true);
+                setSolved(true);
+              }
             }
-          }
+
+            return nextStep;
+          });
 
           return newMaze;
         });
@@ -198,6 +216,9 @@ export default function App() {
         start={start}
         end={end}
         currentAlgorithm={algorithm}
+        transitionClass={
+          algorithm === Algorithms.tremaux ? "" : "transition-colors"
+        }
         steps={numberOfSteps}
         solved={solved}
       />
