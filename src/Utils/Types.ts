@@ -29,7 +29,7 @@ export enum Algorithms {
   dfs = "dfs",
   dijkstra = "dijkstra",
   greedy = "greedy",
-  tremaux = "tremaux",
+  tremaux = "trémaux",
 }
 
 export enum BorderState {
