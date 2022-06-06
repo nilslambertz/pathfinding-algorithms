@@ -7,7 +7,6 @@ import {
   CellStateWithBorder,
 } from "../../Utils/Types";
 import "./Main.css";
-import "./MazeElem.css";
 
 interface MainProps {
   currentAlgorithm: string;

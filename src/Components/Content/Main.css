@@ -1,13 +1,5 @@
 #mazeGrid {
-    width: calc(max(453px, min(151vh, 75.5vw)) + 20px);
+    width: calc(max(450px, min(150vh, 75vw)) + 20px);
     height: calc(max(225px, min(75vh, 37.5vw)) + 15px);
-    grid-template-columns: repeat(151, max(3px, min(1vh, 0.5vw)));
-}
-
-.transition .mazeElem {
-    transition: background-color 0.5s;
-}
-
-.noTransition .mazeElem {
-    transition: none;
+    grid-template-columns: repeat(150, max(3px, min(1vh, 0.5vw)));
 }
