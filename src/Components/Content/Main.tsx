@@ -1,11 +1,17 @@
 import React from "react";
 import { coordiatesAreTheSame } from "../../Utils/Functions";
-import { CellState, CellStates } from "../../Utils/Types";
+import {
+  BorderState,
+  CellState,
+  CellStates,
+  CellStateWithBorder,
+} from "../../Utils/Types";
 import "./Main.css";
 import "./MazeElem.css";
 
 interface MainProps {
   currentAlgorithm: string;
+  transitionClass: string;
   steps: number;
   solved: boolean;
   start: [number, number];
@@ -15,6 +21,7 @@ interface MainProps {
 
 export default function Main({
   currentAlgorithm,
+  transitionClass,
   start,
   end,
   steps,
@@ -44,14 +51,47 @@ export default function Main({
               case CellStates.End:
                 className = "bg-red-600 border border-red-600";
                 break;
-              case CellStates.Empty:
-                className = "bg-white border border-white";
+              case CellStates.Wall:
                 break;
               case CellStates.Visited:
                 className = "bg-orange-500 border border-orange-500";
                 break;
               case CellStates.Correct:
                 className = "bg-blue-500 border border-blue-500";
+                break;
+              default: {
+                className = "bg-white border border-white";
+                const borderCell = cell as CellStateWithBorder;
+
+                if (borderCell.state === CellStates.Visited) {
+                  className = "bg-orange-500 border border-orange-500";
+                }
+
+                if (borderCell.top) {
+                  if (borderCell.top === BorderState.Orange)
+                    className += " border-t-orange-500";
+                  if (borderCell.top === BorderState.Red)
+                    className += " border-t-red-500";
+                }
+                if (borderCell.left) {
+                  if (borderCell.left === BorderState.Orange)
+                    className += " border-l-orange-500";
+                  if (borderCell.left === BorderState.Red)
+                    className += " border-l-red-500";
+                }
+                if (borderCell.right) {
+                  if (borderCell.right === BorderState.Orange)
+                    className += " border-r-orange-500";
+                  if (borderCell.right === BorderState.Red)
+                    className += " border-r-red-500";
+                }
+                if (borderCell.bottom) {
+                  if (borderCell.bottom === BorderState.Orange)
+                    className += " border-b-orange-500";
+                  if (borderCell.bottom === BorderState.Red)
+                    className += " border-b-red-500";
+                }
+              }
             }
 
             if (
@@ -62,45 +102,8 @@ export default function Main({
             }
 
             return (
-              <div className={"transition-colors " + className} key={key} />
+              <div className={transitionClass + " " + className} key={key} />
             );
-            /*
-            switch (cell) {
-              case CellStates.Wall:
-                return <div key={key} />;
-              case CellStates.Start:
-                return <div className="bg-red-500" key={key} />;
-              case CellStates.End:
-                return <div className="bg-red-500" key={key} />;
-              case CellStates.Visited:
-                return <div className="bg-orange-500" key={key} />;
-              case CellStates.Correct:
-                return <div className="bg-blue-500" key={key} />;
-              default: {
-                let width = "2px solid ";
-                let left =
-                  cell.left > 0 ? (cell.left > 1 ? "red" : "orange") : "none";
-                let right =
-                  cell.right > 0 ? (cell.right > 1 ? "red" : "orange") : "none";
-                let top =
-                  cell.top > 0 ? (cell.top > 1 ? "red" : "orange") : "none";
-                let bottom =
-                  cell.bottom > 0
-                    ? cell.bottom > 1
-                      ? "red"
-                      : "orange"
-                    : "none";
-                let style = {
-                  borderBottom: width + bottom,
-                  borderLeft: width + left,
-                  borderTop: width + top,
-                  borderRight: width + right,
-                };
-                return (
-                  <div className={"mazeElem empty"} style={style} key={key} />
-                );
-              }
-            }*/
           })
         )}
         <span className="col-span-full flex flex-row items-center justify-center text-white">
