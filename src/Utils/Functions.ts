@@ -184,24 +184,24 @@ export const getPathNeighbours = (
   if (x > 0 && maze[x - 1][y] !== CellStates.Wall) {
     n.push({
       x: x - 1,
-      y: y,
+      y,
     });
   }
   if (x < maze.length - 1 && maze[x + 1][y] !== CellStates.Wall) {
     n.push({
       x: x + 1,
-      y: y,
+      y,
     });
   }
   if (y > 0 && maze[x][y - 1] !== CellStates.Wall) {
     n.push({
-      x: x,
+      x,
       y: y - 1,
     });
   }
   if (y < maze[0].length - 1 && maze[x][y + 1] !== CellStates.Wall) {
     n.push({
-      x: x,
+      x,
       y: y + 1,
     });
   }
