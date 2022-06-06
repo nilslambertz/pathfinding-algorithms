@@ -13,7 +13,7 @@ import {
 import { algorithms } from "./Utils/Algorithms";
 import Footer from "./Components/Footer/Footer";
 
-const NUMBER_OF_COLS = 151;
+const NUMBER_OF_COLS = 150;
 const NUMBER_OF_ROWS = 75;
 
 export default function App() {
